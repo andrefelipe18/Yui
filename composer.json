@@ -1,0 +1,18 @@
+{
+    "name": "yuiframework/core",
+    "description": "Core of Yui Framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "andrefelipe18",
+            "email": "dominguesstroppa@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Yui\\Core\\": "app"
+        }
+    }
+}

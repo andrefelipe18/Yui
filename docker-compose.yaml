@@ -1,0 +1,11 @@
+version: "3"
+services:
+  app:
+    image: yui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 9000:9000
