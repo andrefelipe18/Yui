@@ -51,7 +51,7 @@ abstract class Dotenv implements DotenvInterface
                     }
                 }
             } else {
-                $path = __DIR__ . '/../../.env';
+                $path = RootFinder::findRootFolder(__DIR__) . '/.env';
 
                 if (!file_exists($path)) {
                     throw new Exception('File not found');
