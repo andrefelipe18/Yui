@@ -26,7 +26,7 @@ abstract class Dotenv implements DotenvInterface
      * @param string $path
      * @return void
      */
-    public static function load(string|null $path): void
+    public static function load(string|null $path = ''): void
     {
         if (!static::$dotenv) {
             static::$dotenv = new stdClass();

@@ -16,7 +16,7 @@ class DotenvTest extends TestCase
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 
         Dotenv::unset();
-        Dotenv::load('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
         $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
 
@@ -30,7 +30,7 @@ class DotenvTest extends TestCase
         $this->expectExceptionMessage('File not found');
 
         Dotenv::unset();
-        Dotenv::load('/non/existent/file');
+        Dotenv::load(path: '/non/existent/file');
     }
 
     #[Test]
@@ -39,7 +39,7 @@ class DotenvTest extends TestCase
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 
         Dotenv::unset();
-        Dotenv::load('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
         $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
 
@@ -55,7 +55,7 @@ class DotenvTest extends TestCase
         $this->expectExceptionMessage('Key not found');
 
         Dotenv::unset();
-        Dotenv::load('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
         Dotenv::get('NON_EXISTENT_KEY');
     }
@@ -66,7 +66,7 @@ class DotenvTest extends TestCase
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 
         Dotenv::unset();
-        Dotenv::load('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
         $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
 
