@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Yui\Helpers;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Yui\Helpers\Dotenv;
 
 class DotenvTest extends TestCase
 {
-    public function test_Load()
+    #[Test]
+    public function load()
     {
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 
@@ -21,7 +23,8 @@ class DotenvTest extends TestCase
         unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
     }
 
-    public function test_Load_Non_Existent_File()
+    #[Test]
+    public function load_non_existent_file()
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('File not found');
@@ -30,7 +33,8 @@ class DotenvTest extends TestCase
         Dotenv::load('/non/existent/file');
     }
 
-    public function test_Get()
+    #[Test]
+    public function get()
     {
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 
@@ -42,7 +46,8 @@ class DotenvTest extends TestCase
         unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
     }
 
-    public function test_Get_Non_Existent_Key()
+    #[Test]
+    public function get_non_existent_key()
     {
         file_put_contents('/home/dre/_PROG/PHP/Yui/Core/.env.test', "TEST_VAR=hello\n");
 
@@ -55,7 +60,8 @@ class DotenvTest extends TestCase
         Dotenv::get('NON_EXISTENT_KEY');
     }
 
-    public function test_Unset()
+    #[Test]
+    public function unset()
     {
         file_put_contents('.env.test', "TEST_VAR=hello\n");
 

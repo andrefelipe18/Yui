@@ -32,10 +32,14 @@ abstract class Dotenv implements DotenvInterface
             static::$dotenv = new stdClass();
 
             if ($path) {
+                if (!file_exists($path)) {
+                    throw new Exception('File not found');
+                }
+
                 $file = file_get_contents($path);
 
                 if ($file === false) {
-                    throw new Exception('File not found');
+                    throw new Exception('Error reading file');
                 }
 
                 $lines = explode("\n", $file);
@@ -49,11 +53,16 @@ abstract class Dotenv implements DotenvInterface
             } else {
                 $path = __DIR__ . '/../../.env';
 
+                if (!file_exists($path)) {
+                    throw new Exception('File not found');
+                }
+
                 $file = file_get_contents($path);
 
                 if ($file === false) {
-                    throw new Exception('File not found');
+                    throw new Exception('Error reading file');
                 }
+
                 $lines = explode("\n", $file);
 
                 foreach ($lines as $line) {
