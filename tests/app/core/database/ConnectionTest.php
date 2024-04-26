@@ -6,7 +6,6 @@ namespace Tests\Yui\Core\Database;
 
 use Exception;
 use PDO;
-use PDOException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Yui\Core\Database\Connection;

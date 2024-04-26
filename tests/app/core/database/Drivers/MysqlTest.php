@@ -8,10 +8,7 @@ use Yui\Core\Database\Drivers\Mysql;
 use PHPUnit\Framework\Attributes\Test;
 use PDO;
 use PDOException;
-
 use PHPUnit\Framework\TestCase;
-use Yui\Helpers\Dotenv;
-use Yui\Helpers\RootFinder;
 
 /**
  * Class MysqlTest
