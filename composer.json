@@ -9,10 +9,11 @@
             "email": "dominguesstroppa@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+    },
     "autoload": {
         "psr-4": {
-            "Yui\\Core\\": "app"
+            "Yui\\": "app"
         }
     }
 }
