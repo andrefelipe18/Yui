@@ -7,7 +7,6 @@ namespace Yui\Helpers;
 use Exception;
 use stdClass;
 use Yui\Interfaces\Helpers\DotenvInterface;
-use Yui\Helpers\Dotenv\DotenvData;
 
 /**
  * This class is responsible for loading the .env file using singleton pattern
@@ -27,20 +26,36 @@ abstract class Dotenv implements DotenvInterface
      * @param string $path
      * @return void
      */
-    public static function load(): void
+    public static function load(string|null $path): void
     {
-        try{
-            if(!static::$dotenv){
-                static::$dotenv = new stdClass();
+        if (!static::$dotenv) {
+            static::$dotenv = new stdClass();
 
-                // Get the path to the .env file
-                $path = __DIR__ . '/../../.env';
-                // Get the contents of the .env file
+            if ($path) {
                 $file = file_get_contents($path);
-                // Split the contents of the .env file by new line
+
+                if ($file === false) {
+                    throw new Exception('File not found');
+                }
+
                 $lines = explode("\n", $file);
 
-                // Loop through each line of the .env file
+                foreach ($lines as $line) {
+                    if (strpos($line, '=') !== false) {
+                        $line = explode('=', $line);
+                        static::$dotenv->{$line[0]} = $line[1];
+                    }
+                }
+            } else {
+                $path = __DIR__ . '/../../.env';
+
+                $file = file_get_contents($path);
+
+                if ($file === false) {
+                    throw new Exception('File not found');
+                }
+                $lines = explode("\n", $file);
+
                 foreach ($lines as $line) {
                     if (strpos($line, '=') !== false) {
                         $line = explode('=', $line);
@@ -48,8 +63,6 @@ abstract class Dotenv implements DotenvInterface
                     }
                 }
             }
-        } catch (Exception $e) {
-            var_dump($e->getMessage());
         }
     }
 
@@ -60,9 +73,21 @@ abstract class Dotenv implements DotenvInterface
     public static function get(string $key): string
     {
         if (static::$dotenv) {
-            return static::$dotenv->{$key};
+            if (property_exists(static::$dotenv, $key)) {
+                return static::$dotenv->{$key};
+            }
+
+            throw new Exception('Key not found');
         }
 
-        return '';
+        throw new Exception('Dotenv not loaded');
+    }
+
+    /**
+     * @return void
+     */
+    public static function unset(): void
+    {
+        static::$dotenv = null;
     }
 }

@@ -9,11 +9,13 @@
             "email": "dominguesstroppa@gmail.com"
         }
     ],
-    "require": {
-    },
     "autoload": {
         "psr-4": {
-            "Yui\\": "app"
+            "Yui\\": "app",
+            "Yui\\Tests\\": "tests"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.1"
     }
 }
