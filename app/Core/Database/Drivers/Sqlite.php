@@ -17,7 +17,7 @@ abstract class Sqlite
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
             ]);
         } catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
+            return $e;
         }
     }
 }
