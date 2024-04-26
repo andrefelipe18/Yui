@@ -25,7 +25,7 @@ abstract class Connection
     /**
      * @return PDO
      */
-    public static function connect(?string $pathToSqlite = null, ?string $envPath = ''): PDO|null
+    public static function connect(?string $pathToSqlite = null, ?string $envPath = '', int $timeout = 30): PDO|null
     {
         if (static::$pdo) {
             return static::$pdo;
@@ -69,10 +69,10 @@ abstract class Connection
         try {
             switch ($driver) {
                 case 'mysql':
-                    $tempPDO = Mysql::connect($host, $dbname, $user, $pass, $port);
+                    $tempPDO = Mysql::connect($host, $dbname, $user, $pass, $port, $timeout);
                     break;
                 case 'pgsql':
-                    $tempPDO = Pgsql::connect($host, $dbname, $user, $pass, $port);
+                    $tempPDO = Pgsql::connect($host, $dbname, $user, $pass, $port, $timeout);
                     break;
             }
 
@@ -95,7 +95,7 @@ abstract class Connection
      */
     public static function disconnect(): void
     {
-        
+
         static::$pdo = null;
     }
 }
