@@ -13,6 +13,10 @@ use Yui\Core\Database\Connection;
 use Yui\Helpers\Dotenv;
 use Yui\Helpers\RootFinder;
 
+/**
+ * Class ConnectionTest
+ * @package Tests\Yui\Core\Database
+ */
 class ConnectionTest extends TestCase
 {
 	/**
@@ -117,6 +121,60 @@ class ConnectionTest extends TestCase
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage("Database connection parameters are not set in the .env file");
+
+		Connection::connect(envPath: $envPath);
+	}
+
+	#[Test]
+	public function disconnect()
+	{
+		$connection = Connection::connect();
+		$connection = Connection::disconnect();
+
+		$this->assertNull($connection);
+	}
+
+	#[Test]
+	public function reusing_connection() 
+	{
+		$connection = Connection::connect();
+		$connection2 = Connection::connect();
+
+		$this->assertSame($connection, $connection2);
+	}
+
+	#[Test]
+	public function expection_is_thrown_when_trying_to_connect_non_existing_database()
+	{
+		file_put_contents('.env.test', "DATABASE_CONNECTION=mysql\nDATABASE_HOST=127.0.0.1\nDATABASE_NAME=NonExistsDB\nDATABASE_USER=root\nDATABASE_PASSWORD=root\nDATABASE_PORT=3306");
+		$envPath = RootFinder::findRootFolder(__DIR__) . '/.env.test';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage("Failed to connect to database: SQLSTATE[HY000] [1049] Unknown database 'NonExistsDB'");
+
+		Connection::connect(envPath: $envPath);
+	}
+
+	#[Test]
+	public function expection_is_thrown_when_trying_to_connect_with_invalid_credentials()
+	{
+		file_put_contents('.env.test', "DATABASE_CONNECTION=mysql\nDATABASE_HOST=127.0.0.1\nDATABASE_NAME=NonExistsDB\nDATABASE_USER=root\nDATABASE_PASSWORD=wrongpassword\nDATABASE_PORT=3306");
+		$envPath = RootFinder::findRootFolder(__DIR__) . '/.env.test';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageMatches("/Failed to connect to database: SQLSTATE\[HY000\] \[1045\] Access denied for user 'root'@'(.*)' \(using password: YES\)/");
+
+		Connection::connect(envPath: $envPath);
+	}
+
+	#[Test]
+	public function exception_is_thrown_when_database_connection_fails()
+	{
+		file_put_contents('.env.test', "DATABASE_CONNECTION=mysql\nDATABASE_HOST=1\nDATABASE_NAME=NonExistsDB\nDATABASE_USER=root\nDATABASE_PASSWORD=wrongpassword\nDATABASE_PORT=3306");
+		$envPath = RootFinder::findRootFolder(__DIR__) . '/.env.test';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage("Failed to connect to database: SQLSTATE[HY000] [2002] Connection timed out");
 
 		Connection::connect(envPath: $envPath);
 	}

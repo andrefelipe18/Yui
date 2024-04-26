@@ -95,6 +95,7 @@ abstract class Connection
      */
     public static function disconnect(): void
     {
+        
         static::$pdo = null;
     }
 }
