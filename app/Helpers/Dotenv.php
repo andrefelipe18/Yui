@@ -79,14 +79,14 @@ abstract class Dotenv implements DotenvInterface
      * @param string $key
      * @return string
      */
-    public static function get(string $key): string
+    public static function get(string $key): string|null
     {
         if (static::$dotenv) {
             if (property_exists(static::$dotenv, $key)) {
                 return static::$dotenv->{$key};
             }
 
-            throw new Exception('Key not found');
+            return null;
         }
 
         throw new Exception('Dotenv not loaded');

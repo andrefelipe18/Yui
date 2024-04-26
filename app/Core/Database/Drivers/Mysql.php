@@ -9,16 +9,17 @@ use PDOException;
 
 abstract class Mysql
 {
-    public static function connect(string $host, string $dbname, string $user, string $pass, string $port): PDO
+    public static function connect(string $host, string $dbname, string $user, string $pass, string $port): PDO|PDOException
     {
         try {
-            $dsn = "mysql:host=$host;dbname=$dbname;port=$port";
+            $dsn = "mysql:host={$host};port={$port};dbname={$dbname}";
+
             return new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
             ]);
         }  catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
+            return $e;
         }
     }
 }

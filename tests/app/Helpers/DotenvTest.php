@@ -51,13 +51,14 @@ class DotenvTest extends TestCase
     {
         file_put_contents('/home/dre/_PROG/PHP/Yui/Core/.env.test', "TEST_VAR=hello\n");
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Key not found');
-
         Dotenv::unset();
         Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
-        Dotenv::get('NON_EXISTENT_KEY');
+        $key = Dotenv::get('NON_EXISTENT_KEY');
+
+        $this->assertEquals('', $key);
+
+        unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
     }
 
     #[Test]

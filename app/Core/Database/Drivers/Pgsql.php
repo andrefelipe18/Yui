@@ -9,7 +9,7 @@ use PDOException;
 
 abstract class Pgsql
 {
-    public static function connect(string $host, string $dbname, string $user, string $pass, string $port): PDO
+    public static function connect(string $host, string $dbname, string $user, string $pass, string $port): PDO|PDOException
     {
         try {
             $dsn = "pgsql:host=$host;dbname=$dbname;port=$port";
@@ -18,7 +18,7 @@ abstract class Pgsql
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
             ]);
         }  catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
+            return $e;
         }
     }
 }

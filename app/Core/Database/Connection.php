@@ -7,6 +7,7 @@ namespace Yui\Core\Database;
 use Exception;
 use PDO;
 use PDOException;
+use PHPUnit\Event\Runtime\PHP;
 use Yui\Helpers\Dotenv;
 use Yui\Core\Database\Drivers\{Sqlite, Pgsql, Mysql};
 
@@ -24,32 +25,76 @@ abstract class Connection
     /**
      * @return PDO
      */
-    public static function connect(string|null $pathToSqlite = null): PDO|null
+    public static function connect(?string $pathToSqlite = null, ?string $envPath = ''): PDO|null
     {
         if (static::$pdo) {
             return static::$pdo;
         }
 
-        Dotenv::load();
+        if ($envPath !== '') {
+            Dotenv::load($envPath);
+        } else {
+            Dotenv::load();
+        }
 
         $driver = Dotenv::get('DATABASE_CONNECTION');
+
+        if ($driver === null) {
+            throw new Exception("Database connection type is not set in the .env file");
+        }
+
+        if (!in_array($driver, ['sqlite', 'mysql', 'pgsql'])) {
+            throw new Exception("Database connection type is not supported");
+        }
+
+        if ($driver === 'sqlite' && $pathToSqlite === null) {
+            throw new Exception("Path to SQLite file is not set");
+        }
+
+        if ($driver === 'sqlite') {
+            static::$pdo = Sqlite::connect($pathToSqlite);
+            return static::$pdo;
+        }
+
         $host = Dotenv::get('DATABASE_HOST');
         $dbname = Dotenv::get('DATABASE_NAME');
         $user = Dotenv::get('DATABASE_USER');
         $pass = Dotenv::get('DATABASE_PASSWORD');
         $port = Dotenv::get('DATABASE_PORT');
 
-        if ($driver === null) {
-            throw new Exception("Database connection type is not set in the .env file");
+        if ($host === null || $dbname === null || $user === null || $pass === null || $port === null) {
+            throw new Exception("Database connection parameters are not set in the .env file");
         }
 
-        match ($driver) {
-            'sqlite' => static::$pdo = Sqlite::connect($pathToSqlite),
-            'mysql' => static::$pdo = Mysql::connect($host, $dbname, $user, $pass, $port),
-            'pgsql' => static::$pdo = Pgsql::connect($host, $dbname, $user, $pass, $port),
-            default => throw new PDOException("Database connection type is not supported")
-        };
+        try {
+            switch ($driver) {
+                case 'mysql':
+                    $tempPDO = Mysql::connect($host, $dbname, $user, $pass, $port);
+                    break;
+                case 'pgsql':
+                    $tempPDO = Pgsql::connect($host, $dbname, $user, $pass, $port);
+                    break;
+            }
+
+            if($tempPDO instanceof PDO) {
+                static::$pdo = $tempPDO;
+            } else {
+                throw new Exception("Failed to connect to database: " . $tempPDO->getMessage());
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Failed to connect to database: " . $e->getMessage());
+        }
 
         return static::$pdo;
+    }
+
+    /**
+     * Ends the connection with the database
+     *
+     * @return void
+     */
+    public static function disconnect(): void
+    {
+        static::$pdo = null;
     }
 }

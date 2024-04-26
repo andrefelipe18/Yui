@@ -19,7 +19,7 @@ services:
     ports:
       - "${DATABASE_PORT}:3306"
     volumes:
-      - polls_mysql_data:/bitnami/mariadb
+      - yui_mysql_data:/bitnami/mariadb
 
   pgsql:
     image: bitnami/postgresql:latest
@@ -30,8 +30,9 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DATABASE_NAME}
     volumes:
-      - polls_pg_data:/bitnami/postgresql # Volume para persistir os dados
+      - yui_pg_data:/bitnami/postgresql # Volume para persistir os dados
+    
 
 volumes:
-  polls_mysql_data:
-  polls_pg_data:
+  yui_mysql_data:
+  yui_pg_data:
