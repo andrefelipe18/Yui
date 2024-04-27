@@ -8,3 +8,13 @@ composer.lock
 
 # Sqlite
 *.sqlite
+
+#Initialization database scripts
+db/mysqlInit.sql
+db/pgsqlInit.sql
+db
+mysqlInit
+pgsqlInit
+
+# My personal notes
+notes.md
