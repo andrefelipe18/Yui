@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yui\Helpers;
+namespace Yui\Core\Helpers;
 
 use Exception;
 use stdClass;
-use Yui\Interfaces\Helpers\DotenvInterface;
+use Yui\Core\Interfaces\Helpers\DotenvInterface;
 
 /**
  * This class is responsible for loading the .env file using singleton pattern

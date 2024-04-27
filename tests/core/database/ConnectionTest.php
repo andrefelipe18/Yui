@@ -9,8 +9,8 @@ use PDO;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Yui\Core\Database\Connection;
-use Yui\Helpers\Dotenv;
-use Yui\Helpers\RootFinder;
+use Yui\Core\Helpers\Dotenv;
+use Yui\Core\Helpers\RootFinder;
 
 /**
  * Class ConnectionTest
@@ -23,7 +23,9 @@ class ConnectionTest extends TestCase
 	 */
 	protected function tearDown(): void
 	{
-		unlink('.env.test');
+		if (file_exists('.env.test')) {
+			unlink('.env.test');
+		}
 		Dotenv::unset();
 		Connection::disconnect();
 

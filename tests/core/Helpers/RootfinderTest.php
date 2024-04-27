@@ -7,7 +7,7 @@ namespace Tests\Yui\Helpers;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Yui\Helpers\RootFinder;
+use Yui\Core\Helpers\RootFinder;
 
 class RootFinderTest extends TestCase
 {

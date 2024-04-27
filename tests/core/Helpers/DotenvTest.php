@@ -6,7 +6,7 @@ namespace Tests\Yui\Helpers;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Yui\Helpers\Dotenv;
+use Yui\Core\Helpers\Dotenv;
 
 class DotenvTest extends TestCase
 {

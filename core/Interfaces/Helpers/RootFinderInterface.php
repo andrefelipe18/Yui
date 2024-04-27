@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yui\Interfaces\Helpers;
+namespace Yui\Core\Interfaces\Helpers;
 
 interface RootFinderInterface
 {

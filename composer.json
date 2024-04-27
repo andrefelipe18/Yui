@@ -12,7 +12,8 @@
     "autoload": {
         "psr-4": {
             "Yui\\": "app",
-            "Yui\\Tests\\": "tests"
+            "Yui\\Tests\\": "tests",
+            "Yui\\Core\\": "core"
         }
     },
     "require-dev": {

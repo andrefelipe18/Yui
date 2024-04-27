@@ -7,8 +7,7 @@ namespace Yui\Core\Database;
 use Exception;
 use PDO;
 use PDOException;
-use PHPUnit\Event\Runtime\PHP;
-use Yui\Helpers\Dotenv;
+use Yui\Core\Helpers\Dotenv;
 use Yui\Core\Database\Drivers\{Sqlite, Pgsql, Mysql};
 
 /**

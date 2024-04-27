@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yui\Helpers;
+namespace Yui\Core\Helpers;
 
 use Exception;
-use Yui\Interfaces\Helpers\RootFinderInterface;
+use Yui\Core\Interfaces\Helpers\RootFinderInterface;
 
 abstract class RootFinder implements RootFinderInterface
 {
