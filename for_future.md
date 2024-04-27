@@ -1,0 +1,12 @@
+- [x] Database
+- [] Model
+- [] DB class
+- [] HTTP Request, Controller and Router
+- [] Middleware
+- [] Authentication class
+- [] Session class
+- [] Cookie class
+- [] File Upload class
+- [] Validation class
+- [] Email class
+- [] Template Engine

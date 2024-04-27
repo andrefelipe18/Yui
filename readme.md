@@ -1,0 +1,45 @@
+# Yui Framework
+
+Yui is a modern, elegant, and powerful PHP framework inspired by Laravel. Developed to streamline the process of building high-quality web applications, Yui offers a flexible and intuitive framework for developers.
+
+## Key Features
+
+- **Simplicity and Elegance**: Yui adopts a clear and elegant syntax, making development simpler and more enjoyable.
+- **Productivity**: With features like robust CLI, integrated ORM, and database migration support, Yui helps you be more productive.
+- **Active Community**: While it's a study-oriented project, Yui is supported by an active community of developers committed to sharing knowledge and experience.
+- **Inspired by Laravel**: If you've worked with Laravel, you'll feel at home with Yui. It follows many of Laravel's best practices and design patterns.
+
+## Main Features
+
+- **Simple Routing**: Easily define routes and link them to controllers to handle HTTP requests. (WIP)
+- **Integrated ORM**: Intuitive and simplified access to the database through an elegant Object-Relational Mapping (ORM). (WIP)
+- **Blade-like Templates**: Utilize a Blade-inspired template system to build dynamic and reusable user interfaces. (WIP)
+- **Integrated Authentication**: Implement user authentication with ease. (WIP)
+- **Database Migrations**: Maintain control over the database structure with simple and reversible migrations. (WIP)
+- **Integrated Testing**: Write and execute unit and integration tests efficiently, ensuring the quality of your code. (WIP)
+- **Middleware Support**: Implement middleware to filter and modify HTTP requests entering your application. (WIP)
+- **CLI Support**: Interact with your application through a robust Command Line Interface (CLI). (WIP)
+
+## Installation
+
+To get started with Yui in your project, simply follow these simple steps:
+
+```bash
+git clone https://github.com/your-username/yui.git
+cd yui
+composer install
+#....
+```
+
+## Roadmap
+
+Yui is a work in progress, and we have a lot of exciting features planned for the future. Here's a brief overview of what's coming:
+[Roadmap](for_future.md)
+
+## Contributing
+
+Contributions are welcome! Feel free to submit pull requests, report issues, or suggest new features. Before submitting a pull request (PR), please make sure to follow the contribution guidelines.
+
+## License
+
+Yui is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
