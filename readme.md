@@ -11,6 +11,7 @@ Yui is a modern, elegant, and powerful PHP framework inspired by Laravel. Develo
 
 ## Main Features
 
+- **FrankenPHP**: Support the FrankenPHP. (WIP)
 - **Simple Routing**: Easily define routes and link them to controllers to handle HTTP requests. (WIP)
 - **Integrated ORM**: Intuitive and simplified access to the database through an elegant Object-Relational Mapping (ORM). (WIP)
 - **Blade-like Templates**: Utilize a Blade-inspired template system to build dynamic and reusable user interfaces. (WIP)
