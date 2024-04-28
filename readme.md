@@ -20,6 +20,7 @@ Yui is a modern, elegant, and powerful PHP framework inspired by Laravel. Develo
 - **Integrated Testing**: Write and execute unit and integration tests efficiently, ensuring the quality of your code. (WIP)
 - **Middleware Support**: Implement middleware to filter and modify HTTP requests entering your application. (WIP)
 - **CLI Support**: Interact with your application through a robust Command Line Interface (CLI). (WIP)
+- **Minimal External Dependencies**: Rely on a minimal number of external dependencies to keep your application lightweight and efficient. (WIP)
 
 ## Installation
 
