@@ -2,82 +2,64 @@
 
 declare(strict_types=1);
 
-namespace Tests\Yui\Helpers;
-
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Yui\Core\Helpers\Dotenv;
+test('load', function () {
+    file_put_contents('.env.test', "TEST_VAR=hello\n");
 
-class DotenvTest extends TestCase
-{
-    #[Test]
-    public function load()
-    {
-        file_put_contents('.env.test', "TEST_VAR=hello\n");
+    Dotenv::unset();
+    Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
-        Dotenv::unset();
-        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
+    expect(Dotenv::get('TEST_VAR'))->toEqual('hello');
 
-        $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
+    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+});
 
-        unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
-    }
+test('load non existent file', function () {
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('File not found');
 
-    #[Test]
-    public function load_non_existent_file()
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('File not found');
+    Dotenv::unset();
+    Dotenv::load(path: '/non/existent/file');
+});
 
-        Dotenv::unset();
-        Dotenv::load(path: '/non/existent/file');
-    }
+test('get', function () {
+    file_put_contents('.env.test', "TEST_VAR=hello\n");
 
-    #[Test]
-    public function get()
-    {
-        file_put_contents('.env.test', "TEST_VAR=hello\n");
+    Dotenv::unset();
+    Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
-        Dotenv::unset();
-        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
+    expect(Dotenv::get('TEST_VAR'))->toEqual('hello');
 
-        $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
+    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+});
 
-        unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
-    }
+test('get non existent key', function () {
+    file_put_contents('/home/dre/_PROG/PHP/Yui/Core/.env.test', "TEST_VAR=hello\n");
 
-    #[Test]
-    public function get_non_existent_key()
-    {
-        file_put_contents('/home/dre/_PROG/PHP/Yui/Core/.env.test', "TEST_VAR=hello\n");
+    Dotenv::unset();
+    Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
-        Dotenv::unset();
-        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
+    $key = Dotenv::get('NON_EXISTENT_KEY');
 
-        $key = Dotenv::get('NON_EXISTENT_KEY');
+    expect($key)->toEqual('');
 
-        $this->assertEquals('', $key);
+    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+});
 
-        unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
-    }
+test('unset', function () {
+    file_put_contents('.env.test', "TEST_VAR=hello\n");
 
-    #[Test]
-    public function unset()
-    {
-        file_put_contents('.env.test', "TEST_VAR=hello\n");
+    Dotenv::unset();
+    Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
-        Dotenv::unset();
-        Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
+    expect(Dotenv::get('TEST_VAR'))->toEqual('hello');
 
-        $this->assertEquals('hello', Dotenv::get('TEST_VAR'));
+    Dotenv::unset();
 
-        Dotenv::unset();
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('Dotenv not loaded');
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Dotenv not loaded');
+    Dotenv::get('TEST_VAR');
 
-        Dotenv::get('TEST_VAR');
-
-        unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
-    }
-}
+    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
+});
