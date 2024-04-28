@@ -23,7 +23,6 @@ test('successful initialization with sqlite', function () {
     $envPath = RootFinder::findRootFolder(__DIR__) . '/.env.test';
     $pathToSqlite = '/home/dre/_PROG/PHP/Yui/Core/db.sqlite';
 
-
     DatabaseInitializer::init(pathToSqlite: $pathToSqlite, envPath: $envPath);
 
     $pdo = Sqlite::connect($pathToSqlite);
@@ -44,12 +43,12 @@ test('successful initialization with mysql', function () {
 
     DatabaseInitializer::init(envPath: $envPath);
 
-    $pdo = new PDO('mysql:host=127.0.0.1;dbname=yui', 'root', 'root');
+    $pdo = Mysql::connect('127.0.0.1', 'yui', 'root', 'root', '3306');
     expect($pdo)->toBeInstanceOf(PDO::class);
 
     $pdo = null;
 
-    $pdo = new PDO('mysql:host=127.0.0.1;dbname=test', 'root', 'root');
+    $pdo = Mysql::connect('127.0.0.1', 'test', 'root', 'root', '3306');
     expect($pdo)->toBeInstanceOf(PDO::class);
 });
 
@@ -161,7 +160,7 @@ test('check if database and table are created correctly in pgsql', function () {
 });
 
 
-test('getDriver() method returns the correct driver type for the SQLite database connection', function () {
+test('getDriver() method returns the correct driver type', function () {
     function getDriver($class)
     {
         $class = new ReflectionClass($class);
