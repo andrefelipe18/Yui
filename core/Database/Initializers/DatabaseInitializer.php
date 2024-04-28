@@ -44,7 +44,9 @@ abstract class DatabaseInitializer
                 // static::$pdo = Sqlite::connect($pathToSqlite);
                 // return static::$pdo;
 
-                
+                $initializer = new SqliteDatabaseInitializer();
+
+                $initializer->initialize($pathToSqlite);
             }
 
             $host = Dotenv::get('DATABASE_HOST');
