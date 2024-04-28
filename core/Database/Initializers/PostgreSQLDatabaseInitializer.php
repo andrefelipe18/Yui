@@ -21,9 +21,15 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
     public static function initialize(array $config): void
     {
         $conn = static::createConnection($config, 'yui');
-        static::createDatabaseAndTable($conn, 'yui', static::getCreateTableQuery());
-        static::createDatabaseAndTable($conn, 'test', static::getCreateTableQuery());
-    }
+
+        static::createDatabase($conn, 'test');
+        static::createTable($conn, 'test', static::getCreateTableQuery());
+
+        static::createDatabase($conn, 'yui');
+        static::createTable($conn, 'yui', static::getCreateTableQuery());
+
+        $conn = null;
+    }   
 
     /**
      * Get the driver type for the PostgreSQL database connection.
@@ -51,7 +57,14 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
         )";
     }
 
-    protected static function createDatabaseAndTable(PDO $conn, string $dbName, string $createTableQuery)
+    /**
+     * Create the database if it doesn't exist.
+     * 
+     * @param PDO $conn PDO database connection.
+     * @param string $dbName Database name.
+     * @return void
+     */
+    protected static function createDatabase(PDO $conn, string $dbName)
     {
         $stmt = $conn->query("SELECT 1 FROM pg_database WHERE datname = '$dbName'");
         $databaseExists = $stmt->fetchColumn();
@@ -60,6 +73,28 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
             $conn->exec("CREATE DATABASE $dbName");
         }
 
-        $conn->exec($createTableQuery);
+        $conn = null;
+    }
+
+    /**
+     * Create the users table if it doesn't exist.
+     * 
+     * @param PDO $conn PDO database connection.
+     * @param string $dbName Database name.
+     * @param string $createTableQuery SQL query to create the table.
+     * @return void
+     */
+    protected static function createTable(PDO $conn, string $dbName, string $createTableQuery)
+    {
+        $conn = new PDO("pgsql:host=localhost;dbname=$dbName", 'root', 'root');
+
+        $stmt = $conn->query("SELECT to_regclass('public.users')");
+        $tableExists = $stmt->fetchColumn();
+
+        if (!$tableExists) {
+            $conn->exec($createTableQuery);
+        }
+
+        $conn = null;
     }
 }

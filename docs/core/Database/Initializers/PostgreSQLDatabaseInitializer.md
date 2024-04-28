@@ -22,10 +22,17 @@ Get the driver type for the PostgreSQL database connection.
 Get the SQL query to create the users table in PostgreSQL.
 - Returns: String SQL query.
 
-### createDatabaseAndTable(PDO $conn, string $dbName, string $createTableQuery)
-Creates the database and table if they don't exist.
+### createDatabase(PDO $conn, string $dbName): void
+Create the database if it doesn't exist.
 - Parameters:
   - `$conn`: PDO database connection.
   - `$dbName`: Database name.
-  - `$createTableQuery`: SQL query to create the table.
+- Returns: Void
+
+### createTable(PDO $conn, string $dbName, string $createTableQuery): void
+Create the users table if it doesn't exist.
+- Parameters:
+  - `$conn`: PDO database connection.
+  - `$dbName`: Database name.
+  - `$createTableQuery`: SQL query to create the users table.
 - Returns: Void

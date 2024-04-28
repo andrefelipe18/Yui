@@ -21,14 +21,19 @@ abstract class DatabaseInitializer
      * 
      * @return void
      */
-    public static function init(array $config = null, ?string $pathToSqlite = null)
+    public static function init(array $config = null, ?string $pathToSqlite = null, ?string $envPath = null): void
     {
+        if($envPath !== null) {
+            Dotenv::load($envPath);
+        } else {
+            Dotenv::load();
+        }
+
         $driver = '';
         if ($config === null) {
-            Dotenv::load();
             $driver = Dotenv::get('DATABASE_CONNECTION');
 
-            if ($driver === null) {
+            if ($driver === '' || $driver === null) {
                 throw new Exception("Database connection type is not set in the .env file");
             }
 
@@ -41,12 +46,10 @@ abstract class DatabaseInitializer
             }
 
             if ($driver === 'sqlite') {
-                // static::$pdo = Sqlite::connect($pathToSqlite);
-                // return static::$pdo;
-
                 $initializer = new SqliteDatabaseInitializer();
 
                 $initializer->initialize($pathToSqlite);
+                return;
             }
 
             $host = Dotenv::get('DATABASE_HOST');
