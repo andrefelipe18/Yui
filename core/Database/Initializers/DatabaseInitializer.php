@@ -21,7 +21,7 @@ abstract class DatabaseInitializer
      * 
      * @return void
      */
-    public static function init(array $config = null)
+    public static function init(array $config = null, ?string $pathToSqlite = null)
     {
         $driver = '';
         if ($config === null) {
@@ -34,6 +34,17 @@ abstract class DatabaseInitializer
 
             if (!in_array($driver, ['sqlite', 'mysql', 'pgsql'])) {
                 throw new Exception("Database connection type is not supported");
+            }
+
+            if ($driver === 'sqlite' && $pathToSqlite === null) {
+                throw new Exception("Path to SQLite file is not set");
+            }
+
+            if ($driver === 'sqlite') {
+                // static::$pdo = Sqlite::connect($pathToSqlite);
+                // return static::$pdo;
+
+                
             }
 
             $host = Dotenv::get('DATABASE_HOST');
@@ -55,10 +66,6 @@ abstract class DatabaseInitializer
                 break;
             case 'pgsql':
                 $initializer = new PostgreSQLDatabaseInitializer();
-                break;
-            case 'sqlite':
-                // $initializer = new SqliteInitializer();
-                echo "SQLite is not implemented yet";
                 break;
         }
 
