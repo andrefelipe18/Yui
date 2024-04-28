@@ -21,7 +21,6 @@ class SqliteDatabaseInitializer extends DatabaseInitializer
         /** @var PDO */
         $conn = Sqlite::connect($pathToSqlite);
         static::createDatabaseAndTable($conn, 'yui', static::getCreateTableQuery());
-        static::createDatabaseAndTable($conn, 'test', static::getCreateTableQuery());
     }
 
     
@@ -43,11 +42,16 @@ class SqliteDatabaseInitializer extends DatabaseInitializer
     protected static function getCreateTableQuery(): string
     {
         return "CREATE TABLE IF NOT EXISTS users (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(30) NOT NULL,
             email VARCHAR(50) NOT NULL,
             password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
+    }
+
+    protected static function createDatabaseAndTable(PDO $conn, string $dbName, string $createTableQuery)
+    {
+        $conn->exec($createTableQuery);
     }
 }
