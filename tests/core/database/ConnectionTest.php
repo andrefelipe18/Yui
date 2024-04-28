@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-use PHPUnit\Framework\Attributes\Test;
 use Yui\Core\Database\Connection;
 use Yui\Core\Helpers\Dotenv;
 use Yui\Core\Helpers\RootFinder;
+
 /**
  * After Running a test method, tearDown() method is called.
  */

@@ -3,23 +3,25 @@
 declare(strict_types=1);
 use Yui\Core\Database\Drivers\Pgsql;
 
-test('successful connection', function () {
-    $host = '127.0.0.1';
-    $dbname = 'test';
-    $user = 'root';
-    $pass = 'root';
-    $port = '5432';
+$config = [
+    'host' => '127.0.0.1',
+    'dbname' => 'test',
+    'user' => 'root',
+    'pass' => 'root',
+    'port' => '5432',
+];
+
+test('successful connection', function () use ($config) {
+    extract($config);
+
     $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
 
     expect($connection)->toBeInstanceOf(PDO::class);
 });
 
-test('connection failure', function () {
-    $host = '127.0.0.1';
+test('connection failure', function () use ($config) {
+    extract($config);
     $dbname = 'wrong_database_name';
-    $user = 'root';
-    $pass = 'root';
-    $port = '5432';
 
     $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
 
@@ -27,12 +29,9 @@ test('connection failure', function () {
     expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5432 failed: FATAL:  database \"wrong_database_name\" does not exist/");
 });
 
-test('authentication failure', function () {
-    $host = '127.0.0.1';
-    $dbname = 'test';
-    $user = 'root';
+test('authentication failure', function () use ($config) {
+    extract($config);
     $pass = 'wrong_password';
-    $port = '5432';
 
     $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
 
@@ -40,11 +39,8 @@ test('authentication failure', function () {
     expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5432 failed: FATAL:  password authentication failed for user \"root\"/");
 });
 
-test('invalid port', function () {
-    $host = '127.0.0.1';
-    $dbname = 'test';
-    $user = 'root';
-    $pass = 'root';
+test('invalid port', function () use ($config) {
+    extract($config);
     $port = '5433';
 
     $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
@@ -53,12 +49,9 @@ test('invalid port', function () {
     expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5433/");
 });
 
-test('database failure', function () {
+test('database failure', function () use ($config) {
+    extract($config);
     $host = '1';
-    $dbname = 'wrong_database';
-    $user = 'root';
-    $pass = 'wrong_password';
-    $port = '5432';
 
     $connection = Pgsql::connect($host, $dbname, $user, $pass, $port, 1);
 
