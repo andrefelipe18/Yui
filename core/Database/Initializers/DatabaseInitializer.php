@@ -10,7 +10,7 @@ use Yui\Core\Helpers\Dotenv;
 
 /**
  * Base class for database initializers.
- * 
+ *
  * Dependency Injection: Instead of creating the PDO connection directly in child classes,
  * you could pass it as a dependency. This would make your code more testable and flexible.
  */
@@ -18,7 +18,7 @@ abstract class DatabaseInitializer
 {
     /**
      * Initialize the database.
-     * 
+     *
      * @return void
      */
     public static function init(array $config = null, ?string $pathToSqlite = null, ?string $envPath = null): void
@@ -81,7 +81,7 @@ abstract class DatabaseInitializer
 
     /**
      * Creates a PDO connection based on configuration.
-     * 
+     *
      * @param array $config Database connection configuration.
      * @return PDO PDO database connection.
      */
@@ -105,7 +105,7 @@ abstract class DatabaseInitializer
 
     /**
      * Creates the database and table if they don't exist.
-     * 
+     *
      * @param PDO $conn PDO database connection.
      * @param string $dbName Database name.
      * @param string $createTableQuery SQL query to create the table.
@@ -120,14 +120,14 @@ abstract class DatabaseInitializer
 
     /**
      * Get the driver type for the database connection.
-     * 
+     *
      * @return string Database driver type.
      */
     abstract protected static function getDriver(): string;
 
     /**
      * Get the SQL query to create the database table.
-     * 
+     *
      * @return string SQL query.
      */
     abstract protected static function getCreateTableQuery(): string;

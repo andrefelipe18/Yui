@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yui\Core\Database\Initializers;
 
 use PDO;
+use Yui\Core\Database\Drivers\Pgsql;
 use Yui\Core\Database\Initializers\DatabaseInitializer;
 
 /**
@@ -14,7 +15,7 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
 {
     /**
      * Initialize the database.
-     * 
+     *
      * @param array $config Database connection configuration.
      * @return void
      */
@@ -23,17 +24,17 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
         $conn = static::createConnection($config, 'yui');
 
         static::createDatabase($conn, 'test');
-        static::createTable($conn, 'test', static::getCreateTableQuery());
+        static::createTable($conn, 'test', static::getCreateTableQuery(), config: $config);
 
         static::createDatabase($conn, 'yui');
-        static::createTable($conn, 'yui', static::getCreateTableQuery());
+        static::createTable($conn, 'yui', static::getCreateTableQuery(), config: $config);
 
         $conn = null;
-    }   
+    }
 
     /**
      * Get the driver type for the PostgreSQL database connection.
-     * 
+     *
      * @return string Database driver type.
      */
     protected static function getDriver(): string
@@ -43,7 +44,7 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Get the SQL query to create the users table in PostgreSQL.
-     * 
+     *
      * @return string SQL query.
      */
     protected static function getCreateTableQuery(): string
@@ -59,7 +60,7 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Create the database if it doesn't exist.
-     * 
+     *
      * @param PDO $conn PDO database connection.
      * @param string $dbName Database name.
      * @return void
@@ -78,15 +79,15 @@ class PostgreSQLDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Create the users table if it doesn't exist.
-     * 
+     *
      * @param PDO $conn PDO database connection.
      * @param string $dbName Database name.
      * @param string $createTableQuery SQL query to create the table.
      * @return void
      */
-    protected static function createTable(PDO $conn, string $dbName, string $createTableQuery)
+    protected static function createTable(PDO $conn, string $dbName, string $createTableQuery, ?array $config = [])
     {
-        $conn = new PDO("pgsql:host=localhost;dbname=$dbName", 'root', 'root');
+        $conn = Pgsql::connect($config['host'], $dbName, $config['user'], $config['pass'], $config['port']);
 
         $stmt = $conn->query("SELECT to_regclass('public.users')");
         $tableExists = $stmt->fetchColumn();

@@ -12,7 +12,7 @@ class SqliteDatabaseInitializer extends DatabaseInitializer
 {
     /**
      * Initialize the database.
-     * 
+     *
      * @param array $config Database connection configuration.
      * @return void
      */
@@ -23,10 +23,10 @@ class SqliteDatabaseInitializer extends DatabaseInitializer
         static::createDatabaseAndTable($conn, 'yui', static::getCreateTableQuery());
     }
 
-    
+
     /**
      * Get the driver type for the MySQL database connection.
-     * 
+     *
      * @return string Database driver type.
      */
     protected static function getDriver(): string
@@ -36,7 +36,7 @@ class SqliteDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Get the SQL query to create the users table in MySQL.
-     * 
+     *
      * @return string SQL query.
      */
     protected static function getCreateTableQuery(): string

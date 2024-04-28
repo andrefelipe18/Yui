@@ -18,7 +18,7 @@ abstract class Pgsql
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
                 PDO::ATTR_TIMEOUT => $timeout
             ]);
-        }  catch (PDOException $e) {
+        } catch (PDOException $e) {
             return $e;
         }
     }

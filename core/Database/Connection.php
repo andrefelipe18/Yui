@@ -8,7 +8,9 @@ use Exception;
 use PDO;
 use PDOException;
 use Yui\Core\Helpers\Dotenv;
-use Yui\Core\Database\Drivers\{Sqlite, Pgsql, Mysql};
+use Yui\Core\Database\Drivers\Sqlite;
+use Yui\Core\Database\Drivers\Pgsql;
+use Yui\Core\Database\Drivers\Mysql;
 
 /**
  * This class is responsible for connecting to the database using PDO

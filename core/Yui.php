@@ -10,7 +10,7 @@ class Yui
 {
     /**
      * Get the version of the application.
-     * 
+     *
      * @return string
      */
     public static function version(): string
@@ -20,7 +20,7 @@ class Yui
 
     /**
      * Boot the application.
-     * 
+     *
      * @return void
      */
     public static function boot(): void

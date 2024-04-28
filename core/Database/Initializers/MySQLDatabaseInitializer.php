@@ -13,7 +13,7 @@ class MySQLDatabaseInitializer extends DatabaseInitializer
 {
     /**
      * Initialize the MySQL database.
-     * 
+     *
      * @param array $config Database connection configuration.
      * @return void
      */
@@ -26,7 +26,7 @@ class MySQLDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Get the driver type for the MySQL database connection.
-     * 
+     *
      * @return string Database driver type.
      */
     protected static function getDriver(): string
@@ -36,7 +36,7 @@ class MySQLDatabaseInitializer extends DatabaseInitializer
 
     /**
      * Get the SQL query to create the users table in MySQL.
-     * 
+     *
      * @return string SQL query.
      */
     protected static function getCreateTableQuery(): string

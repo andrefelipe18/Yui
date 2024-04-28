@@ -19,7 +19,7 @@ abstract class Mysql
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
                 PDO::ATTR_TIMEOUT => $timout
             ]);
-        }  catch (PDOException $e) {
+        } catch (PDOException $e) {
             return $e;
         }
     }

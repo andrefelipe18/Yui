@@ -13,7 +13,7 @@ use Yui\Core\Interfaces\Helpers\DotenvInterface;
  * @package Yui\Helpers\Dotenv
  * @property private static stdClass $dotenv
  * @method static load()
- 
+
  */
 abstract class Dotenv implements DotenvInterface
 {
