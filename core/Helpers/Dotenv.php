@@ -11,66 +11,63 @@ use Yui\Core\Interfaces\Helpers\DotenvInterface;
 /**
  * This class is responsible for loading the .env file using singleton pattern
  * @package Yui\Helpers\Dotenv
- * @property private static stdClass $dotenv
- * @method static load()
-
  */
-abstract class Dotenv implements DotenvInterface
+class Dotenv implements DotenvInterface
 {
     /**
      * @var stdClass
      */
-    private static stdClass|null $dotenv = null;
+    protected static ?stdClass $dotenv = null;
 
     /**
-     * @param string $path
+     * @param string|null $path
      * @return void
      */
-    public static function load(string|null $path = ''): void
+    public static function load(?string $path = ''): void
     {
         if (!static::$dotenv) {
             static::$dotenv = new stdClass();
 
             if ($path) {
-                if (!file_exists($path)) {
-                    throw new Exception('File not found');
-                }
-
-                $file = file_get_contents($path);
-
-                if ($file === false) {
-                    throw new Exception('Error reading file');
-                }
-
-                $lines = explode("\n", $file);
-
-                foreach ($lines as $line) {
-                    if (strpos($line, '=') !== false) {
-                        $line = explode('=', $line);
-                        static::$dotenv->{$line[0]} = $line[1];
-                    }
-                }
+                self::verifyFileExistence($path);
+                self::processFile($path);
             } else {
                 $path = RootFinder::findRootFolder(__DIR__) . '/.env';
+                self::verifyFileExistence($path);
+                self::processFile($path);
+            }
+        }
+    }
 
-                if (!file_exists($path)) {
-                    throw new Exception('File not found');
-                }
+    /**
+     * @param string $path
+     * @return void
+     */
+    private static function verifyFileExistence(string $path): void
+    {
+        if (!file_exists($path)) {
+            throw new Exception('File not found');
+        }
+    }
 
-                $file = file_get_contents($path);
+    /**
+     * @param string $path
+     * @return void
+     */
+    private static function processFile(string $path): void
+    {
+        $file = file_get_contents($path);
 
-                if ($file === false) {
-                    throw new Exception('Error reading file');
-                }
+        if ($file === false) {
+            throw new Exception('Error reading file');
+        }
 
-                $lines = explode("\n", $file);
+        $lines = explode("\n", $file);
 
-                foreach ($lines as $line) {
-                    if (strpos($line, '=') !== false) {
-                        $line = explode('=', $line);
-                        static::$dotenv->{$line[0]} = $line[1];
-                    }
-                }
+        foreach ($lines as $line) {
+            if (strpos($line, '=') !== false) {
+                $line = explode('=', $line);
+                static::$dotenv->{$line[0]} = $line[1];
             }
         }
     }

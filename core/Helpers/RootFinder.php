@@ -7,7 +7,7 @@ namespace Yui\Core\Helpers;
 use Exception;
 use Yui\Core\Interfaces\Helpers\RootFinderInterface;
 
-abstract class RootFinder implements RootFinderInterface
+class RootFinder implements RootFinderInterface
 {
     /**
      * Recursively finds the root folder of the project.

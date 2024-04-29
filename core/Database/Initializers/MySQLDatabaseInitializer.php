@@ -4,49 +4,48 @@ declare(strict_types=1);
 
 namespace Yui\Core\Database\Initializers;
 
-use Yui\Core\Database\Initializers\DatabaseInitializer;
+use Exception;
+use PDO;
+use Yui\Core\Database\Drivers\Mysql;
+use Yui\Core\Database\Initializers\Initializer;
 
 /**
  * Initializes MySQL database.
  */
-class MySQLDatabaseInitializer extends DatabaseInitializer
+class MySQLDatabaseInitializer extends Initializer
 {
     /**
-     * Initialize the MySQL database.
+     * Run the initializer.
      *
-     * @param array $config Database connection configuration.
-     * @return void
+     * @param array<string, string> $config
      */
-    public static function initialize(array $config)
+    public function run(array $config): void
     {
-        $conn = static::createConnection($config);
-        static::createDatabaseAndTable($conn, 'yui', static::getCreateTableQuery());
-        static::createDatabaseAndTable($conn, 'test', static::getCreateTableQuery());
+        $conn = $this->createConnection($config);
+        self::createDatabase($conn, 'test');
+        self::createDatabase($conn, 'yui');
     }
 
     /**
-     * Get the driver type for the MySQL database connection.
+     * Create a new database.
      *
-     * @return string Database driver type.
+     * @param PDO $conn
+     * @param string $dbName
      */
-    protected static function getDriver(): string
+    protected static function createDatabase(PDO $conn, string $dbName): void
     {
-        return 'mysql';
+        $conn->exec("CREATE DATABASE IF NOT EXISTS {$dbName}");
     }
 
     /**
-     * Get the SQL query to create the users table in MySQL.
+     * Create a new connection.
      *
-     * @return string SQL query.
+     * @param array<string, string> $config
+     * @param string|null $dbName
+     * @return PDO
      */
-    protected static function getCreateTableQuery(): string
+    protected function createConnection(array $config, ?string $dbName = ''): PDO
     {
-        return "CREATE TABLE IF NOT EXISTS users (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(30) NOT NULL,
-            email VARCHAR(50) NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )";
+        return new PDO("mysql:host={$config['host']};port={$config['port']}", $config['user'], $config['pass']);
     }
 }

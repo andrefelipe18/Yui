@@ -1,7 +1,7 @@
 # Dotenv Class
 
 `namespace: Yui\Core\Helpers`
-This class is responsible for loading the .env file using the singleton pattern.
+This class is responsible for loading the .env file using singleton pattern.
 
 ## Introduction
 The Dotenv class provides functionality to load and access environment variables from a .env file. It implements the singleton pattern to ensure that the .env file is loaded only once during the application's lifecycle.
@@ -14,7 +14,7 @@ The Dotenv class provides functionality to load and access environment variables
 
 ## Methods
 
-### load(string|null $path = '')
+### load(?string $path = ''): void
 Loads the .env file and parses its contents to populate the `$dotenv` property.
 - Parameters:
   - `$path`: Optional. Path to the .env file. If not provided, it defaults to the project root folder.
@@ -33,3 +33,19 @@ Retrieves the value of the specified environment variable.
 ### unset(): void
 Resets the `$dotenv` property to null, effectively unloading the environment variables.
 - Returns: Void
+
+### verifyFileExistence(string $path): void
+Verifies the existence of the .env file.
+- Parameters:
+  - `$path`: The path to the .env file.
+- Returns: Void
+- Throws:
+  - `Exception`: If the file is not found.
+
+### processFile(string $path): void
+Processes the contents of the .env file.
+- Parameters:
+  - `$path`: The path to the .env file.
+- Returns: Void
+- Throws:
+  - `Exception`: If there's an error reading the file.

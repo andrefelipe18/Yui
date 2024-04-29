@@ -3,6 +3,15 @@
 declare(strict_types=1);
 
 use Yui\Core\Helpers\Dotenv;
+
+afterEach(function () {
+    Dotenv::unset();
+    
+    if (file_exists('.env.test')) {
+        unlink('.env.test');
+    }
+});
+
 test('load', function () {
     file_put_contents('.env.test', "TEST_VAR=hello\n");
 
@@ -10,8 +19,6 @@ test('load', function () {
     Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
     expect(Dotenv::get('TEST_VAR'))->toEqual('hello');
-
-    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
 });
 
 test('load non existent file', function () {
@@ -29,8 +36,6 @@ test('get', function () {
     Dotenv::load(path: '/home/dre/_PROG/PHP/Yui/Core/.env.test');
 
     expect(Dotenv::get('TEST_VAR'))->toEqual('hello');
-
-    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
 });
 
 test('get non existent key', function () {
@@ -42,8 +47,6 @@ test('get non existent key', function () {
     $key = Dotenv::get('NON_EXISTENT_KEY');
 
     expect($key)->toEqual('');
-
-    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
 });
 
 test('unset', function () {
@@ -60,6 +63,4 @@ test('unset', function () {
     $this->expectExceptionMessage('Dotenv not loaded');
 
     Dotenv::get('TEST_VAR');
-
-    unlink('/home/dre/_PROG/PHP/Yui/Core/.env.test');
 });

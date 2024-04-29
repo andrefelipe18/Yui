@@ -7,9 +7,9 @@ namespace Yui\Core\Database\Drivers;
 use PDO;
 use PDOException;
 
-abstract class Pgsql
+class Pgsql
 {
-    public static function connect(string $host, string $dbname, string $user, string $pass, string $port, int $timeout = 30): PDO|PDOException
+    public static function connect(string $host, string $dbname, string $user, string $pass, string $port, ?int $timeout = 30): PDO|PDOException
     {
         try {
             $dsn = "pgsql:host=$host;dbname=$dbname;port=$port";

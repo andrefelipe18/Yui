@@ -124,4 +124,4 @@ test('exception is thrown when database connection fails', function () {
     $this->expectExceptionMessage("Failed to connect to database: SQLSTATE[HY000] [2002] Connection timed out");
 
     Connection::connect(envPath: $envPath, timeout: 1);
-});
+}); 

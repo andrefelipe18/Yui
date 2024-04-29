@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yui\Core;
 
-use Yui\Core\Database\Initializers\DatabaseInitializer;
+use Yui\Core\Database\DatabaseInitializer;
 
 class Yui
 {

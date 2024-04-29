@@ -17,7 +17,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MARIADB_DATABASE: ${DATABASE_NAME}
     ports:
-      - "${DATABASE_PORT}:3306"
+      - "3306:3306"
     volumes:
       - yui_mysql_data:/bitnami/mariadb
 

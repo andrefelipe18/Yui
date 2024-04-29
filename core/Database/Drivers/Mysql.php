@@ -7,9 +7,9 @@ namespace Yui\Core\Database\Drivers;
 use PDO;
 use PDOException;
 
-abstract class Mysql
+class Mysql
 {
-    public static function connect(string $host, string $dbname, string $user, string $pass, string $port, int $timout = 30): PDO|PDOException
+    public static function connect(string $host, string $dbname, string $user, string $pass, string $port, ?int $timout = 30): PDO|PDOException
     {
         try {
             $dsn = "mysql:host={$host};port={$port};dbname={$dbname}";

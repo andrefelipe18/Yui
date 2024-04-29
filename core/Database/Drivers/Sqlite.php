@@ -7,9 +7,9 @@ namespace Yui\Core\Database\Drivers;
 use PDO;
 use PDOException;
 
-abstract class Sqlite
+class Sqlite
 {
-    public static function connect(string $path): PDO
+    public static function connect(string $path): PDO|PDOException
     {
         try {
             return new PDO("sqlite:$path", null, null, [

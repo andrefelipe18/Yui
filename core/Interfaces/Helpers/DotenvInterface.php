@@ -10,7 +10,7 @@ interface DotenvInterface
      * @param string $path
      * @return void
      */
-    public static function load(string|null $path): void;
+    public static function load(string $path): void;
 
     /**
      * @param string $key

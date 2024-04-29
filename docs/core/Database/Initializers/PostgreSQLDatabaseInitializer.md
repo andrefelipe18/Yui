@@ -9,28 +9,28 @@ This class is responsible for initializing PostgreSQL databases. It creates a PD
 ## Methods
 
 ### initialize(array $config): void
-Initialize the PostgreSQL database.
+Initializes the PostgreSQL database.
 - Parameters:
   - `$config`: Database connection configuration.
 - Returns: Void
 
 ### getDriver(): string
-Get the driver type for the PostgreSQL database connection.
+Gets the driver type for the PostgreSQL database connection.
 - Returns: String Database driver type.
 
 ### getCreateTableQuery(): string
-Get the SQL query to create the users table in PostgreSQL.
+Gets the SQL query to create the users table in PostgreSQL.
 - Returns: String SQL query.
 
 ### createDatabase(PDO $conn, string $dbName): void
-Create the database if it doesn't exist.
+Creates the database if it doesn't exist.
 - Parameters:
   - `$conn`: PDO database connection.
   - `$dbName`: Database name.
 - Returns: Void
 
 ### createTable(PDO $conn, string $dbName, string $createTableQuery): void
-Create the users table if it doesn't exist.
+Creates the users table if it doesn't exist.
 - Parameters:
   - `$conn`: PDO database connection.
   - `$dbName`: Database name.

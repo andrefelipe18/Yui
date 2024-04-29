@@ -1,32 +1,29 @@
-# MySQLDatabaseInitializer Class
+# Initializer Class
 
 `namespace: Yui\Core\Database\Initializers`
-Initializes MySQL database.
+Abstract class for database initializers.
 
 ## Introduction
-The MySQLDatabaseInitializer class is responsible for initializing a MySQL database. It extends the Initializer class and implements methods to create a new database and establish a connection to the MySQL server.
+The Initializer class defines abstract methods to run the initializer, create a new database, and create a new connection. It serves as a base class for concrete database initializer classes such as MySQLDatabaseInitializer and PostgreSQLDatabaseInitializer.
 
 ## Methods
 
 ### run(array $config): void
-Runs the initializer.
+Abstract method to run the initializer.
 - Parameters:
-  - `$config`: Database connection configuration array.
+  - `$config`: Database connection configuration.
 - Returns: Void
-- Throws: None
 
 ### createDatabase(PDO $conn, string $dbName): void
-Creates a new database.
+Abstract method to create a new database.
 - Parameters:
   - `$conn`: PDO The PDO database connection.
   - `$dbName`: String The name of the database to be created.
 - Returns: Void
-- Throws: None
 
 ### createConnection(array $config, ?string $dbName = ''): PDO
-Creates a new connection to the MySQL server.
+Abstract method to create a new connection.
 - Parameters:
   - `$config`: Database connection configuration array.
   - `$dbName`: Optional. Name of the database to connect to. Default is an empty string.
 - Returns: PDO The PDO database connection.
-- Throws: None
