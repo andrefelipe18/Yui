@@ -1,12 +1,15 @@
 - [] Database
-- [] Model
-- [] DB class
-- [] HTTP Request, Controller and Router
+    - [] Query Builder
+    - [] Migration
+    - [] Seeders
+- [] Command Line Interface
+- [] File routing system
 - [] Middleware
+- [] Validation class
 - [] Authentication class
 - [] Session class
 - [] Cookie class
 - [] File Upload class
-- [] Validation class
-- [] Email class
+- [] Cache(Only Redis)
 - [] Template Engine
+- [] Email class
