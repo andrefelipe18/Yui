@@ -58,7 +58,7 @@ class Connection
      * @param integer $timeout
      * @return PDO
      */
-    public static function connectMysqlOrPgsql(string $driver, int $timeout): PDO
+    private static function connectMysqlOrPgsql(string $driver, int $timeout): PDO
     {
         $host = Dotenv::get('DATABASE_HOST');
         $dbname = Dotenv::get('DATABASE_NAME');
