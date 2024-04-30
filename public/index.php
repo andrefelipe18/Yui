@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Yui\Core\Database\DatabaseInitializer;
-use Yui\Core\Database\DB;
+use Yui\Core\Yui;
 
 // Start the session
 session_start();
@@ -16,13 +16,4 @@ if ($argc > 1 && $argv[1] === 'create-db') {
     exit;
 }
 
-$users = DB::table('users')
-        ->select('name', 'id')
-        ->get();
-
-
-foreach ($users as $user) {
-    echo "ID: $user->id\n";
-    echo "Nome: $user->name\n";
-}
-// Yui::boot();
+Yui::boot();
