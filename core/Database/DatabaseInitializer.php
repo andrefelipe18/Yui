@@ -92,7 +92,7 @@ class DatabaseInitializer
         if (self::$driver == '' || self::$driver == null) {
             throw new DatabaseInitializerException("Database connection type is not set in the .env file");
         }
-             
+
         if (!in_array(self::$driver, ['sqlite', 'mysql', 'pgsql'])) {
             throw new DatabaseInitializerException("Database connection type is not supported");
         }

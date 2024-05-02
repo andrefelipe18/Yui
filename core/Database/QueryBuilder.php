@@ -51,10 +51,10 @@ class QueryBuilder
     public function __call($method, $params)
     {
         switch ($method) {
-            case 'insert';
+            case 'insert':
                 $this->insertBuilder->insert(...$params);
                 break;
-            case 'update';
+            case 'update':
                 $this->updateParams = $params[0];
                 break;
             case 'select':
