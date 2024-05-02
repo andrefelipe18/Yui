@@ -64,7 +64,6 @@ class InsertBuilder
 			$values = "('" . implode("', '", $values) . "')";
 		}
 
-		echo $values . PHP_EOL;
 		return "INSERT INTO {$this->table} ({$columns}) VALUES {$values}";
 	}
 
