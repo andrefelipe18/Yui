@@ -40,7 +40,7 @@ class UpdateBuilder extends Builder
      * @param array<int|string, mixed> $whereParams
      * @return void
      */
-    public function setWhereParams(array $whereParams): void
+    private function setWhereParams(array $whereParams): void
     {
         $this->whereParams = $whereParams;
     }
@@ -51,7 +51,7 @@ class UpdateBuilder extends Builder
      * @param array<string, mixed> $values The values to be updated.
      * @return $this
      */
-    public function update(array $values): UpdateBuilder
+    private function update(array $values): UpdateBuilder
     {
         $this->validateValues($values);
 
