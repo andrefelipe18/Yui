@@ -20,7 +20,8 @@
         "pestphp/pest": "^2.34",
         "pestphp/pest-plugin-drift": "^2.6",
         "friendsofphp/php-cs-fixer": "^3.54",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^1.10",
+        "mockery/mockery": "^1.6"
     },
     "config": {
         "allow-plugins": {

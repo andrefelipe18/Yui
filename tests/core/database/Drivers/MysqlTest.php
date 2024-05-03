@@ -1,60 +1,72 @@
 <?php
 
 declare(strict_types=1);
+
 use Yui\Core\Database\Drivers\Mysql;
+use Mockery as m;
 
-$config = [
-    'host' => '127.0.0.1',
-    'dbname' => 'test',
-    'user' => 'root',
-    'pass' => 'root',
-    'port' => '3306',
-];
+beforeEach(function () {
+	$this->pdoMock = m::mock(PDO::class);
+});
 
-test('successful connection', function () use ($config) {
-    extract($config);
-    
-    $connection = Mysql::connect($host, $dbname, $user, $pass, $port);
+afterEach(function () {
+	m::close();
+});
+
+test('successful connection', function () {
+    $this->pdoMock->shouldReceive('getAttribute')
+        ->with(PDO::ATTR_SERVER_INFO) 
+        ->andReturn('MySQL 8.0.23');
+
+    $connection = Mysql::connect('127.0.0.1', 'test', 'root', 'root', '3306', 30, $this->pdoMock);
 
     expect($connection)->toBeInstanceOf(PDO::class);
 });
 
-test('connection failure', function () use ($config) {
-    extract($config);
-    $dbname = 'wrong_database';
+test('connection failure', function () {
+	$pdoException = new PDOException("SQLSTATE[HY000] [1049] Unknown database 'wrong_database'");
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow($pdoException);
 
-    $connection = Mysql::connect($host, $dbname, $user, $pass, $port);
+	$connection = Mysql::connect('127.0.0.1', 'wrong_database', 'root', 'root', '3306', 2, $this->pdoMock);
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[HY000\] \[1049\] Unknown database '(.*)'/");
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[HY000\] \[1049\] Unknown database '(.*)'/");
 });
 
-test('authentication failure', function () use ($config) {
-    extract($config);
-    $pass = 'wrong_password';
+test('authentication failure', function (){
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[HY000] [1045] Access denied for user 'root' (using password: YES)"));
 
-    $connection = Mysql::connect($host, $dbname, $user, $pass, $port);
+	$connection = Mysql::connect('127.0.0.1', 'test', 'root', 'wrongPass', '3306', 2, $this->pdoMock);
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[HY000\] \[1045\] Access denied for user '(.*)'@'(.*)' \(using password: YES\)/");
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[HY000\] \[1045\] Access denied for user '(.*)' \(using password: YES\)/");
 });
 
-test('invalid port', function () use ($config) {
-    extract($config);
-    $port = '3307';
+test('invalid port', function (){
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[HY000] [2002] Connection refused"));
 
-    $connection = Mysql::connect($host, $dbname, $user, $pass, $port);
+	$port = '6033';
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[HY000\] \[2002\] Connection refused/");
+	$connection = Mysql::connect('127.0.0.1', 'test', 'root', 'root', $port, 1, $this->pdoMock);
+
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[HY000\] \[2002\] Connection refused/");
 });
 
-test('database failure', function () use ($config) {
-    extract($config);
-    $host = '1';
+test('database failure', function (){
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[HY000] [2002] Connection timed out"));
+	$host = '1';
 
-    $connection = Mysql::connect($host, $dbname, $user, $pass, $port, 1);
+	$connection = Mysql::connect($host,  'test', 'root', 'root', '3306', 1, $this->pdoMock);
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[HY000\] \[2002\] Connection timed out/");
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[HY000\] \[2002\] Connection timed out/");
 });
