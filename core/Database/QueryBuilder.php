@@ -12,6 +12,8 @@ use Yui\Core\Database\Builders\WhereBuilder;
 use Yui\Core\Database\Builders\InsertBuilder;
 use Yui\Core\Database\Builders\UpdateBuilder;
 use Yui\Core\Database\Builders\DeleteBuilder;
+use Yui\Core\Database\Builders\OrderBy;
+use Yui\Core\Database\Builders\OrderByBuilder;
 
 /**
  * @package Yui\Core\Database
@@ -24,6 +26,7 @@ use Yui\Core\Database\Builders\DeleteBuilder;
  * @method QueryBuilder join(string $table, string $first, string $operator, string $second)
  * @method QueryBuilder leftJoin(string $table, string $first, string $operator, string $second)
  * @method QueryBuilder rightJoin(string $table, string $first, string $operator, string $second)
+ * @method QueryBuilder orderBy(string $column, string $order)
  * @method QueryBuilder get()
  */
 class QueryBuilder
@@ -40,6 +43,7 @@ class QueryBuilder
     protected InsertBuilder $insertBuilder;
     protected UpdateBuilder $updateBuilder;
     protected DeleteBuilder $deleteBuilder;
+    protected OrderByBuilder $orderByBuilder;
 
     public function __construct(string $table)
     {
@@ -50,6 +54,7 @@ class QueryBuilder
         $this->insertBuilder = new InsertBuilder($table);
         $this->updateBuilder = new UpdateBuilder($table, $this->whereBuilder);
         $this->deleteBuilder = new DeleteBuilder($table, $this->whereBuilder);
+        $this->orderByBuilder = new OrderByBuilder();
     }
 
     public function __call($method, $params)
@@ -92,6 +97,9 @@ class QueryBuilder
             case 'rightJoin':
                 $this->joinBuilder->rightJoin(...$params);
                 break;
+            case 'orderBy':
+                $this->orderByBuilder->orderBy(...$params);
+                break;
             case 'get':
                 return $this->exec();
         }
@@ -105,8 +113,9 @@ class QueryBuilder
         $whereSql = $this->whereBuilder->getQuery();
         $whereParams = $this->whereBuilder->getParams();
         $joinSql = $this->joinBuilder->getQuery();
+        $orderBySql = $this->orderByBuilder->getQuery();
 
-        $this->query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql}";
+        $this->query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql}";
 
         $conn = Connection::connect();
         $stmt = $conn->prepare($this->query);
