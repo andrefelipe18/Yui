@@ -9,7 +9,7 @@ use Yui\Core\Database\Builders\QueryTrait;
 
 /**
  * Class responsible for building SQL order by queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class OrderByBuilder extends Builder
@@ -22,7 +22,7 @@ class OrderByBuilder extends Builder
 
     /**
      * Orders the results by the specified column.
-     * 
+     *
      * @param string $column The column to order by.
      * @param string $order The order to be used.
      * @return OrderByBuilder

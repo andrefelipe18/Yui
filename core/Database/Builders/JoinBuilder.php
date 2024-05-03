@@ -9,7 +9,7 @@ use Yui\Core\Database\Builders\QueryTrait;
 
 /**
  * Class responsible for building SQL join queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class JoinBuilder extends Builder
@@ -22,7 +22,7 @@ class JoinBuilder extends Builder
 
     /**
      * Joins two tables.
-     * 
+     *
      * @param string $table The table to join.
      * @param string $column1 The column from the first table.
      * @param string $operator The operator to be used in the join clause.
@@ -39,7 +39,7 @@ class JoinBuilder extends Builder
     
     /**
      * Joins two tables using the LEFT JOIN clause.
-     * 
+     *
      * @param string $table The table to join.
      * @param string $column1 The column from the first table.
      * @param string $operator The operator to be used in the join clause.
@@ -56,7 +56,7 @@ class JoinBuilder extends Builder
 
     /**
      * Joins two tables using the RIGHT JOIN clause.
-     * 
+     *
      * @param string $table The table to join.
      * @param string $column1 The column from the first table.
      * @param string $operator The operator to be used in the join clause.
@@ -73,7 +73,7 @@ class JoinBuilder extends Builder
 
     /**
      * Checks if the join parameters are valid.
-     * 
+     *
      * @param string $table The table to join.
      * @param string $column1 The column from the first table.
      * @param string $operator The operator to be used in the join clause.

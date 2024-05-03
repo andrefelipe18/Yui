@@ -10,7 +10,7 @@ use Yui\Core\Database\Builders\Builder;
 
 /**
  * Class responsible for building SQL delete queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class DeleteBuilder extends Builder

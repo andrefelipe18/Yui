@@ -10,7 +10,7 @@ use Yui\Core\Database\Builders\Builder;
 
 /**
  * Class responsible for building SQL insert queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class InsertBuilder extends Builder

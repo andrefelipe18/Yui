@@ -6,7 +6,7 @@ namespace Yui\Core\Database\Builders;
 
 /**
  * Trait responsible for building SQL queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 trait QueryTrait
@@ -16,7 +16,7 @@ trait QueryTrait
 
     /**
      * Returns the query.
-     * 
+     *
      * @return string
      */
     public function getQuery(): string
@@ -26,7 +26,7 @@ trait QueryTrait
 
     /**
      * Returns the query parameters.
-     * 
+     *
      * @return array<int|string, mixed>
      */
     public function getParams(): array

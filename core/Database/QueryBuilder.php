@@ -17,7 +17,7 @@ use Yui\Core\Database\Builders\OrderByBuilder;
 
 /**
  * @package Yui\Core\Database
- * 
+ *
  * @method QueryBuilder select(string $columns)
  * @method QueryBuilder where(string $column, string $operator, mixed $value)
  * @method QueryBuilder andWhere(string $column, string $operator, mixed $value)

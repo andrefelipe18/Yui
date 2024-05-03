@@ -8,7 +8,7 @@ use Yui\Core\Database\Builders\Builder;
 
 /**
  * Class responsible for building SQL select queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class SelectBuilder extends Builder

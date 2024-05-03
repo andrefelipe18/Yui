@@ -1,14 +1,15 @@
 - [] Database
-    - [] Query Builder
-        - [] Select
-        - [] Insert
-        - [] Update
-        - [] Delete
+    - [x] Query Builder
+        - [x] Select
+        - [x] Insert
+        - [x] Update
+        - [x] Delete
+        - [x] Join
+        - [x] Where
+        - [x] Group By
+        - [x] Order By
+        - [] Limit
         - [] Raw Query
-        - [] Join
-        - [] Where
-        - [] Group By
-        - [] Order By
     - [] Migration
     - [] Seeders
 - [] Command Line Interface

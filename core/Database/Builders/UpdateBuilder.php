@@ -9,7 +9,7 @@ use Yui\Core\Database\Connection;
 
 /**
  * Class responsible for building SQL update queries.
- * 
+ *
  * @package Yui\Core\Database\Builders
  */
 class UpdateBuilder extends Builder
@@ -51,7 +51,7 @@ class UpdateBuilder extends Builder
      * @param array<string, mixed> $values The values to be updated.
      * @return $this
      */
-    private function update(array $values): UpdateBuilder
+    public function update(array $values): UpdateBuilder
     {
         $this->validateValues($values);
 
