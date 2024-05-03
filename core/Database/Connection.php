@@ -29,9 +29,9 @@ class Connection
      * @param string|null $pathToSqlite
      * @param string|null $envPath
      * @param int|null $timeout
-     * @return PDO|null
+     * @return PDO
      */
-    public static function connect(?string $pathToSqlite = null, ?string $envPath = '', ?int $timeout = 30): PDO|null
+    public static function connect(?string $pathToSqlite = null, ?string $envPath = '', ?int $timeout = 30): PDO
     {
         if (self::$pdo !== null) {
             return self::$pdo;

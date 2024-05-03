@@ -6,13 +6,17 @@ namespace Yui\Core\Database\Builders;
 
 use PDO;
 use Yui\Core\Database\Connection;
+use Yui\Core\Database\Builders\Builder;
 
 /**
  * Class responsible for building SQL insert queries.
+ * 
+ * @package Yui\Core\Database\Builders
  */
-class InsertBuilder
+class InsertBuilder extends Builder
 {
     protected string $table = '';
+    /** @var array<string, mixed> */
     protected array $values = [];
     protected PDO $conn;
 
@@ -29,7 +33,7 @@ class InsertBuilder
 
     /**
      * Inserts the values into the specified table.
-     * @param array|null $values The values to be inserted.
+     * @param array<mixed, mixed> $values The values to be inserted.
      * @return string|null The ID of the last inserted row, or null if no row was inserted.
      */
     public function insert(array $values): ?string
@@ -45,7 +49,7 @@ class InsertBuilder
     /**
      * Creates the SQL query to be executed.
      *
-     * @param array $values The values to be inserted.
+     * @param array<mixed, mixed> $values The values to be inserted.
      * @return string The SQL query.
      */
     private function createQuery(array $values): string
@@ -70,10 +74,10 @@ class InsertBuilder
     /**
      * Validates the values to be inserted.
      *
-     * @param array $values The values to be inserted.
+     * @param array<mixed, mixed> $values The values to be inserted.
      * @throws \Exception If the values are not valid.
      */
-    private function validateValues(array $values)
+    private function validateValues(array $values): void
     {
         if (empty($values)) {
             throw new \Exception('Values cannot be empty');

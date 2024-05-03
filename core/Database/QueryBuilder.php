@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yui\Core\Database;
 
 use PDO;
+use Yui\Core\Database\Builders\Builder;
 use Yui\Core\Database\Builders\JoinBuilder;
 use Yui\Core\Database\Connection;
 use Yui\Core\Database\Builders\SelectBuilder;
@@ -12,113 +13,104 @@ use Yui\Core\Database\Builders\WhereBuilder;
 use Yui\Core\Database\Builders\InsertBuilder;
 use Yui\Core\Database\Builders\UpdateBuilder;
 use Yui\Core\Database\Builders\DeleteBuilder;
-use Yui\Core\Database\Builders\OrderBy;
 use Yui\Core\Database\Builders\OrderByBuilder;
 
 /**
  * @package Yui\Core\Database
- * @method QueryBuilder insert(array $values)
- * @method QueryBuilder update(array $values)
- * @method QueryBuilder select(string ...$columns)
- * @method QueryBuilder where(string $column, string $operator, string $value)
- * @method QueryBuilder andWhere(string $column, string $operator, string $value)
- * @method QueryBuilder orWhere(string $column, string $operator, string $value)
- * @method QueryBuilder join(string $table, string $first, string $operator, string $second)
- * @method QueryBuilder leftJoin(string $table, string $first, string $operator, string $second)
- * @method QueryBuilder rightJoin(string $table, string $first, string $operator, string $second)
- * @method QueryBuilder orderBy(string $column, string $order)
- * @method QueryBuilder get()
+ * 
+ * @method QueryBuilder select(string $columns)
+ * @method QueryBuilder where(string $column, string $operator, mixed $value)
+ * @method QueryBuilder andWhere(string $column, string $operator, mixed $value)
+ * @method QueryBuilder orWhere(string $column, string $operator, mixed $value)
+ * @method QueryBuilder join(string $table, string $column1, string $operator, string $column2)
+ * @method QueryBuilder leftJoin(string $table, string $column1, string $operator, string $column2)
+ * @method QueryBuilder insert(array<string, mixed> $values)
+ * @method QueryBuilder update(array<string, mixed> $values)
+ * @method QueryBuilder delete()
+ * @method QueryBuilder orderBy(string $column, string $order = 'ASC')
  */
 class QueryBuilder
 {
+    protected PDO $conn;
     protected string $table = '';
-    protected string $query = '';
-    protected string $joinSql = '';
-    protected bool $isUpdate = false;
-    protected bool $isDelete = false;
-    protected array $updateParams = [];
-    protected SelectBuilder $selectBuilder;
-    protected WhereBuilder $whereBuilder;
-    protected JoinBuilder $joinBuilder;
-    protected InsertBuilder $insertBuilder;
-    protected UpdateBuilder $updateBuilder;
-    protected DeleteBuilder $deleteBuilder;
-    protected OrderByBuilder $orderByBuilder;
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $builders;
+    protected mixed $currentBuilder;
 
     public function __construct(string $table)
     {
+        $this->conn = Connection::connect();
         $this->table = $table;
-        $this->selectBuilder = new SelectBuilder();
-        $this->whereBuilder = new WhereBuilder();
-        $this->joinBuilder = new JoinBuilder();
-        $this->insertBuilder = new InsertBuilder($table);
-        $this->updateBuilder = new UpdateBuilder($table, $this->whereBuilder);
-        $this->deleteBuilder = new DeleteBuilder($table, $this->whereBuilder);
-        $this->orderByBuilder = new OrderByBuilder();
+        $this->currentBuilder = $this;
+        $this->builders = [
+            'select' => new SelectBuilder(),
+            'where' => new WhereBuilder(),
+            'join' => new JoinBuilder(),
+            'insert' => new InsertBuilder($table),
+            'update' => new UpdateBuilder($table),
+            'delete' => new DeleteBuilder($table),
+            'orderBy' => new OrderByBuilder(),
+        ];
     }
 
-    public function __call($method, $params)
+    /**
+     * Magic method to handle method calls
+     * @param string $method
+     * @param array<mixed> $params
+     * @return mixed
+     */
+    public function __call(string $method, array $params): mixed
     {
-        switch ($method) {
-            case 'insert':
-                $this->insertBuilder->insert(...$params);
-                break;
-            case 'update':
-                $this->isUpdate = true;
-                $this->updateParams = $params[0];
-                break;
-            case 'delete':
-                $this->isDelete = true;
-                $this->deleteBuilder->delete();
-                break;
-            case 'select':
-                $this->selectBuilder->select(...$params);
-                break;
-            case 'where':
-                $this->whereBuilder->where(...$params);
-                if($this->isUpdate) {
-                    $this->updateBuilder->update($this->updateParams);
-                } else if($this->isDelete) {
-                    $this->deleteBuilder->delete();
-                }
-                break;
-            case 'andWhere':
-                $this->whereBuilder->andWhere(...$params);
-                break;
-            case 'orWhere':
-                $this->whereBuilder->orWhere(...$params);
-                break;
-            case 'join':
-                $this->joinBuilder->join(...$params);
-                break;
-            case 'leftJoin':
-                $this->joinBuilder->leftJoin(...$params);
-                break;
-            case 'rightJoin':
-                $this->joinBuilder->rightJoin(...$params);
-                break;
-            case 'orderBy':
-                $this->orderByBuilder->orderBy(...$params);
-                break;
-            case 'get':
-                return $this->exec();
+        // If the method belongs to the current builder, direct the call to it
+        if (
+            $this->currentBuilder !== $this &&
+            method_exists($this->currentBuilder, $method)
+        ) {
+            return $this->currentBuilder->$method(...$params);
         }
 
-        return $this;
+        // If the method belongs to a specific builder, change the context for that builder
+        foreach ($this->builders as $builderName => $builder) {
+            if (method_exists($builder, $method)) {
+                $this->currentBuilder = $builder; // Change the context
+                return $builder->$method(...$params);
+            }
+        }
+
+        throw new \BadMethodCallException("The method {$method} does not exist");
     }
 
-    private function exec()
+    /**
+     * Execute the query and return the result
+     * @return array<object>
+     */
+    public function get()
     {
-        $columns = $this->selectBuilder->getQuery();
-        $whereSql = $this->whereBuilder->getQuery();
-        $whereParams = $this->whereBuilder->getParams();
-        $joinSql = $this->joinBuilder->getQuery();
-        $orderBySql = $this->orderByBuilder->getQuery();
+        return $this->exec();
+    }
 
-        $this->query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql}";
+    /**
+     * Make the query and return the result
+     * @return array<object>
+     */
+    private function exec(): array
+    {
+        $columns = $this->builders['select']->getQuery();
 
-        $conn = Connection::connect();
-        $stmt = $conn->prepare($this->query);
+        echo "Columns: {$columns}" . PHP_EOL . PHP_EOL;
+
+        $whereSql = $this->builders['where']->getQuery();
+        $whereParams = $this->builders['where']->getParams();
+        $joinSql = $this->builders['join']->getQuery();
+        $orderBySql = $this->builders['orderBy']->getQuery();
+
+        $query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql}";
+
+        var_dump($query);
+
+        $stmt = $this->conn->prepare($query);
 
         $stmt->execute($whereParams);
 
