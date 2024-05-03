@@ -20,7 +20,7 @@ Establishes a connection to the database using PDO.
   - `$pathToSqlite`: Optional. Path to the SQLite file. Required if the database connection type is SQLite.
   - `$envPath`: Optional. Path to the .env file. If not provided, it defaults to an empty string.
   - `$timeout`: Optional. Connection timeout in seconds. Default is 30 seconds.
-- Returns: PDO|null The PDO database connection on success, or null on failure.
+- Returns: PDO The PDO database connection
 - Throws:
   - `Exception`: If database connection parameters are not set in the .env file, or if there's an error connecting to the database.
 
