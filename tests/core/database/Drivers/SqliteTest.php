@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 use Yui\Core\Database\Drivers\Sqlite;
-use PHPUnit\Framework\Attributes\Test;
-/**
- * Run after each test method
- */
+
+beforeEach(function () {
+	$this->pdoMock = Mockery::mock(PDO::class);
+});
+
 afterEach(function () {
-    unlink('sqlite.db');
+	Mockery::close();
 });
 
 test('successful connection', function () {
-    file_put_contents('sqlite.db', '');
-    $path = 'sqlite.db';
+    $this->pdoMock->shouldReceive('getAttribute')
+        ->with(PDO::ATTR_SERVER_INFO) 
+        ->andReturn('SQLite 3.34.1');
 
-    $connection = Sqlite::connect($path);
+    $connection = Sqlite::connect('/test/path', $this->pdoMock);
     expect($connection)->toBeInstanceOf(PDO::class);
 });

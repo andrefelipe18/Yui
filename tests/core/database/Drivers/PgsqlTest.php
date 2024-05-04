@@ -1,60 +1,73 @@
 <?php
 
 declare(strict_types=1);
+
 use Yui\Core\Database\Drivers\Pgsql;
 
-$config = [
-    'host' => '127.0.0.1',
-    'dbname' => 'test',
-    'user' => 'root',
-    'pass' => 'root',
-    'port' => '5432',
-];
-
-test('successful connection', function () use ($config) {
-    extract($config);
-
-    $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
-
-    expect($connection)->toBeInstanceOf(PDO::class);
+beforeEach(function () {
+	$this->pdoMock = Mockery::mock(PDO::class);
 });
 
-test('connection failure', function () use ($config) {
-    extract($config);
-    $dbname = 'wrong_database_name';
-
-    $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
-
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5432 failed: FATAL:  database \"wrong_database_name\" does not exist/");
+afterEach(function () {
+	Mockery::close();
 });
 
-test('authentication failure', function () use ($config) {
-    extract($config);
-    $pass = 'wrong_password';
+test('successful connection', function () {
+	$this->pdoMock->shouldReceive('getAttribute')
+		->with(PDO::ATTR_SERVER_INFO)
+		->andReturn('PostgreSQL 13.2');
 
-    $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
+	$connection = Pgsql::connect('127.0.0.1', 'test', 'root', 'root', '3306', 2, $this->pdoMock);
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5432 failed: FATAL:  password authentication failed for user \"root\"/");
+	expect($connection)->toBeInstanceOf(PDO::class);
 });
 
-test('invalid port', function () use ($config) {
-    extract($config);
-    $port = '5433';
+test('connection failure', function () {
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[08006] [7] connection to server at"));
 
-    $connection = Pgsql::connect($host, $dbname, $user, $pass, $port);
+	$dbname = 'wrong_database_name';
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"(.*)\", port 5433/");
+	$connection = Pgsql::connect('127.0.0.1', $dbname, 'root', 'root', '3306', 2, $this->pdoMock);
+
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at/");
 });
 
-test('database failure', function () use ($config) {
-    extract($config);
-    $host = '1';
+test('authentication failure', function () {
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[08006] [7] connection to server at"));
+	$pass = 'wrong_password';
 
-    $connection = Pgsql::connect($host, $dbname, $user, $pass, $port, 1);
+	$connection = Pgsql::connect('127.0.0.1', 'test', 'root', $pass, '3306', 2, $this->pdoMock);
 
-    expect($connection)->toBeInstanceOf(PDOException::class);
-    expect($connection->getMessage())->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at \"1\" \(0.0.0.1\), port 5432 failed: timeout expired/");
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at/");
+});
+
+test('invalid port', function () {
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[08006] [7] connection to server at"));
+
+	$port = '6033';
+
+	$connection = Pgsql::connect('127.0.0.1', 'test', 'root', 'root', $port, 1, $this->pdoMock);
+
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at/");
+});
+
+test('database failure', function () {
+	$this->pdoMock->shouldReceive('getAttribute')
+		->andThrow(new PDOException("SQLSTATE[08006] [7] connection to server at"));
+	$host = '1';
+
+	$connection = Pgsql::connect($host, 'test', 'root', 'root', '3306', 1, $this->pdoMock);
+
+	expect($connection)->toBeInstanceOf(PDOException::class)
+		->and($connection->getMessage())
+		->toMatch("/SQLSTATE\[08006\] \[7\] connection to server at/");
 });

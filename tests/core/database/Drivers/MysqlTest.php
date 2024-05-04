@@ -3,14 +3,13 @@
 declare(strict_types=1);
 
 use Yui\Core\Database\Drivers\Mysql;
-use Mockery as m;
 
 beforeEach(function () {
-	$this->pdoMock = m::mock(PDO::class);
+	$this->pdoMock = Mockery::mock(PDO::class);
 });
 
 afterEach(function () {
-	m::close();
+	Mockery::close();
 });
 
 test('successful connection', function () {
