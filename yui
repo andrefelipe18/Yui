@@ -1,0 +1,8 @@
+<?php
+
+if ($argc > 1 && $argv[1] === 'up') {
+	exec(
+        'php public/index.php'
+    );
+    exit;
+}
