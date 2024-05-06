@@ -9,7 +9,7 @@
         - [x] Group By
         - [x] Order By
         - [x] Limit
-        - [] Raw Query
+        - [x] Raw Query
     - [] Migration
     - [] Seeders
 - [] Command Line Interface

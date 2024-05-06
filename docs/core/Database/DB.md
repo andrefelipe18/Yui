@@ -13,3 +13,10 @@ Creates a new instance of the QueryBuilder class with the specified table name.
 - Parameters:
   - `$table`: String The name of the database table.
 - Returns: QueryBuilder An instance of the QueryBuilder class.
+
+
+### raw(string $sql, array $params = []): array
+Executes a raw SQL query.
+- Parameters:
+  - `$sql`: String The SQL query to be executed.
+  - `$params`: Array The parameters to be used in the query.

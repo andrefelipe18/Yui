@@ -71,14 +71,16 @@ class QueryBuilder
             $this->currentBuilder !== $this &&
             method_exists($this->currentBuilder, $method)
         ) {
-            return $this->currentBuilder->$method(...$params);
+            $this->currentBuilder->$method(...$params);
+            return $this;
         }
 
         // If the method belongs to a specific builder, change the context for that builder
         foreach ($this->builders as $builderName => $builder) {
             if (method_exists($builder, $method)) {
                 $this->currentBuilder = $builder; // Change the context
-                return $builder->$method(...$params);
+                $builder->$method(...$params);
+                return $this;
             }
         }
 
@@ -108,8 +110,6 @@ class QueryBuilder
         $limitSql = $this->builders['limit']->getQuery();
 
         $query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql} {$limitSql}";
-
-        var_dump($query);
 
         $stmt = $this->conn->prepare($query);
 
