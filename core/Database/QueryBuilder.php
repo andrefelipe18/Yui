@@ -14,6 +14,7 @@ use Yui\Core\Database\Builders\InsertBuilder;
 use Yui\Core\Database\Builders\UpdateBuilder;
 use Yui\Core\Database\Builders\DeleteBuilder;
 use Yui\Core\Database\Builders\OrderByBuilder;
+use Yui\Core\Database\Builders\LimitBuilder;
 
 /**
  * @package Yui\Core\Database
@@ -28,6 +29,7 @@ use Yui\Core\Database\Builders\OrderByBuilder;
  * @method QueryBuilder update(array<string, mixed> $values)
  * @method QueryBuilder delete()
  * @method QueryBuilder orderBy(string $column, string $order = 'ASC')
+ * @method QueryBuilder limit(int $limit)
  */
 class QueryBuilder
 {
@@ -52,6 +54,7 @@ class QueryBuilder
             'update' => new UpdateBuilder($table),
             'delete' => new DeleteBuilder($table),
             'orderBy' => new OrderByBuilder(),
+            'limit' => new LimitBuilder(),
         ];
     }
 
@@ -98,15 +101,13 @@ class QueryBuilder
     private function exec(): array
     {
         $columns = $this->builders['select']->getQuery();
-
-        echo "Columns: {$columns}" . PHP_EOL . PHP_EOL;
-
         $whereSql = $this->builders['where']->getQuery();
         $whereParams = $this->builders['where']->getParams();
         $joinSql = $this->builders['join']->getQuery();
         $orderBySql = $this->builders['orderBy']->getQuery();
+        $limitSql = $this->builders['limit']->getQuery();
 
-        $query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql}";
+        $query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql} {$limitSql}";
 
         var_dump($query);
 

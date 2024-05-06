@@ -8,7 +8,7 @@
         - [x] Where
         - [x] Group By
         - [x] Order By
-        - [] Limit
+        - [x] Limit
         - [] Raw Query
     - [] Migration
     - [] Seeders
