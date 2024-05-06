@@ -64,7 +64,7 @@ class DeleteBuilder extends Builder
      * @param string $column The column to be used in the where clause.
      * @param string $operator The operator to be used in the where clause.
      * @param mixed $value The value to be used in the where clauseP
-     * @return void
+     * @return DeleteBuilder
      */
     public function where(string $column, string $operator, $value): DeleteBuilder
     {
@@ -104,7 +104,7 @@ class DeleteBuilder extends Builder
 
     /**
      * Creates the SQL query to be executed.
-     * 
+     *
      * @return string
      */
     private function createQuery(): string

@@ -18,7 +18,7 @@ class InsertBuilder extends Builder
     protected string $table = '';
     /** @var array<string, mixed> */
     protected array $values = [];
-    protected ?string $insertId = null;
+    protected string|false $insertId = false;
     protected PDO $conn;
     protected ?PDO $testingPdo; //Var to tests suite
 
@@ -37,7 +37,7 @@ class InsertBuilder extends Builder
     /**
      * Inserts the values into the specified table.
      * @param array<mixed, mixed> $values The values to be inserted.
-     * @return string|null The ID of the last inserted row, or null if no row was inserted.
+     * @return InsertBuilder
      */
     public function insert(array $values): InsertBuilder
     {
@@ -85,7 +85,7 @@ class InsertBuilder extends Builder
      */
     public function getLastInsertedID(): ?string
     {
-        return $this->insertId;
+        return $this->insertId === false ? null : $this->insertId;
     }
 
     /**

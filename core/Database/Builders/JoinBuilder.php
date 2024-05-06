@@ -36,7 +36,7 @@ class JoinBuilder extends Builder
 
         return $this;
     }
-    
+
     /**
      * Joins two tables using the LEFT JOIN clause.
      *

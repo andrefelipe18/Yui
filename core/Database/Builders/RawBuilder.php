@@ -13,34 +13,35 @@ use Yui\Core\Database\Connection;
  * @package Yui\Core\Database\Builders
  */
 class RawBuilder
-{	
-	/**
-	 * Execute a raw SQL query.
-	 *
-	 * @param string $sql
-	 * @param array $params
-	 * @return array
-	 * @throws PDOException
-	 */
-	public static function raw(string $sql, array $params = [], ?PDO $testingPdo = null): array
-	{
-		try {
-			$conn = Connection::connect();
-			
-			if ($testingPdo !== null) {
-				$conn = $testingPdo;
-			}
+{
+    /**
+     * Execute a raw SQL query.
+     *
+     * @param string $sql
+     * @param array<mixed, mixed> $params
+     * @param PDO|null $testingPdo
+     * @return array<mixed, mixed>
+     * @throws PDOException
+     */
+    public static function raw(string $sql, array $params = [], ?PDO $testingPdo = null): array
+    {
+        try {
+            $conn = Connection::connect();
 
-			$stmt = $conn->prepare($sql);
+            if ($testingPdo !== null) {
+                $conn = $testingPdo;
+            }
 
-			foreach ($params as $key => &$value) {
-				$stmt->bindParam($key, $value);
-			}
+            $stmt = $conn->prepare($sql);
 
-			$stmt->execute();
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
-		} catch (PDOException $e) {
-			throw new PDOException($e->getMessage());
-		}
-	}
+            foreach ($params as $key => &$value) {
+                $stmt->bindParam($key, $value);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new PDOException($e->getMessage());
+        }
+    }
 }

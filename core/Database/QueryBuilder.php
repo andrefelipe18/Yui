@@ -81,9 +81,9 @@ class QueryBuilder
         foreach ($this->builders as $builderName => $builder) {
             if (method_exists($builder, $method)) {
                 $this->currentBuilder = $builder; // Change the context
-                if($method === 'insert' || $method === 'update' || $method === 'delete'){
+                if($method === 'insert' || $method === 'update' || $method === 'delete') {
                     $builder->$method(...$params);
-                     return $this;
+                    return $this;
                 } else {
                     $builder->$method(...$params);
                     return $this;
