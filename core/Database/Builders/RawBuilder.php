@@ -22,10 +22,15 @@ class RawBuilder
 	 * @return array
 	 * @throws PDOException
 	 */
-	public static function raw(string $sql, array $params = []): array
+	public static function raw(string $sql, array $params = [], ?PDO $testingPdo = null): array
 	{
 		try {
 			$conn = Connection::connect();
+			
+			if ($testingPdo !== null) {
+				$conn = $testingPdo;
+			}
+
 			$stmt = $conn->prepare($sql);
 
 			foreach ($params as $key => &$value) {

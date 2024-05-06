@@ -14,13 +14,13 @@ use Yui\Core\Database\Builders\RawBuilder;
  */
 class DB
 {
-    public static function table(string $table): QueryBuilder
+    public static function table(string $table, ?PDO $testingPdo = null): QueryBuilder
     {
-        return new QueryBuilder($table);
+        return new QueryBuilder($table, $testingPdo);
     }
 
-    public static function raw(string $sql, array $params = []): array
+    public static function raw(string $sql, array $params = [], ?PDO $testingPdo = null): array
     {
-        return RawBuilder::raw($sql, $params);
+        return RawBuilder::raw($sql, $params, $testingPdo);
     }
 }

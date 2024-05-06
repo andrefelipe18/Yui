@@ -18,17 +18,20 @@ class InsertBuilder extends Builder
     protected string $table = '';
     /** @var array<string, mixed> */
     protected array $values = [];
+    protected ?string $insertId = null;
     protected PDO $conn;
+    protected ?PDO $testingPdo; //Var to tests suite
 
     /**
      * InsertBuilder class constructor.
      *
      * @param string $table Name of the table where the insertion will be performed.
      */
-    public function __construct(string $table)
+    public function __construct(string $table, ?PDO $testingPdo = null)
     {
         $this->table = $table;
         $this->conn = Connection::connect();
+        $this->testingPdo = $testingPdo;
     }
 
     /**
@@ -36,14 +39,19 @@ class InsertBuilder extends Builder
      * @param array<mixed, mixed> $values The values to be inserted.
      * @return string|null The ID of the last inserted row, or null if no row was inserted.
      */
-    public function insert(array $values): ?string
+    public function insert(array $values): InsertBuilder
     {
         $this->validateValues($values);
         $query = $this->createQuery($values);
 
-        $this->conn->exec($query);
+        if($this->testingPdo !== null) {
+            $this->testingPdo->exec($query);
+        } else {
+            $this->conn->exec($query);
+        }
 
-        return $this->conn->lastInsertId() ?: null;
+        $this->insertId = $this->conn->lastInsertId();
+        return $this;
     }
 
     /**
@@ -69,6 +77,15 @@ class InsertBuilder extends Builder
         }
 
         return "INSERT INTO {$this->table} ({$columns}) VALUES {$values}";
+    }
+
+    /**
+     * Returns the ID of the last inserted row.
+     * @return string|null The ID of the last inserted row, or null if no row was inserted.
+     */
+    public function getLastInsertedID(): ?string
+    {
+        return $this->insertId;
     }
 
     /**

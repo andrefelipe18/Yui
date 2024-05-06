@@ -19,6 +19,10 @@ The InsertBuilder class is responsible for building SQL INSERT queries. It allow
 - Type: PDO
 - Description: The PDO database connection.
 
+### $pdo
+- Type: PDO
+- Description: The PDO instance to be used for the query in test mode.
+
 ## Methods
 
 ### __construct(string $table)
@@ -31,7 +35,11 @@ Constructor method to initialize the InsertBuilder instance with the specified t
 Inserts the specified values into the table.
 - Parameters:
   - `$values`: Array An array of values to be inserted into the table.
+  - `$pdo`: PDO The PDO instance to be used for the query in test mode.
 - Returns: String|null The ID of the last inserted row, or null if no row was inserted.
+
+### get(): array
+Returns the id of the last inserted row.
 
 ### createQuery(array $values): string
 Creates the SQL query to insert values into the table.

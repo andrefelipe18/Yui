@@ -27,12 +27,17 @@ The UpdateBuilder class is responsible for building SQL update queries. It allow
 - Type: PDO
 - Description: The PDO connection used for database operations.
 
+### $pdo
+- Type: PDO
+- Description: The PDO instance to be used for the query in test mode.
+
 ## Methods
 
 ### __construct(string $table)
 Class constructor. Initializes the UpdateBuilder with the specified table name.
 - Parameters:
   - `$table`: The name of the table where the update operation will be performed.
+  - `$pdo`: PDO The PDO instance to be used for the query in test mode.
 
 ### setWhereParams(array $whereParams): void
 Sets the parameters for the WHERE clause.

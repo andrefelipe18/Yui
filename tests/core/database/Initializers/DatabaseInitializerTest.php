@@ -7,7 +7,7 @@ use Yui\Core\Database\DatabaseInitializer;
 use Yui\Core\Database\Drivers\Mysql;
 use Yui\Core\Exceptions\Database\DatabaseInitializerException;
 use Yui\Core\Helpers\Dotenv;
-use Yui\Core\Helpers\RootFinder; 
+use Yui\Core\Helpers\RootFinder;
 
 afterEach(function () {
     if (file_exists('.env.test')) {

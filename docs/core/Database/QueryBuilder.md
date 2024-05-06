@@ -23,12 +23,17 @@ The QueryBuilder class provides a fluent interface for building SQL queries. It 
 - Type: mixed
 - Description: The current query builder instance.
 
+### $pdo
+- Type: PDO
+- Description: The PDO instance to be used for the query in test mode.
+
 ## Methods
 
 ### __construct(string $table)
 Constructor method to initialize the QueryBuilder instance.
 - Parameters:
   - `$table`: String The name of the database table.
+  - `$pdo`: PDO The PDO instance to be used for the query in test mode.
 - Returns: Void
 
 ### __call(string $method, array $params): mixed

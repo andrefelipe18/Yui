@@ -22,17 +22,19 @@ class DeleteBuilder extends Builder
     protected array $whereParams = [];
     protected WhereBuilder $whereBuilder;
     protected PDO $conn;
+    protected ?PDO $testingPdo; //Var to tests suite
 
     /**
      * InsertBuilder class constructor.
      *
      * @param string $table Name of the table where the insertion will be performed.
      */
-    public function __construct(string $table)
+    public function __construct(string $table, ?PDO $testingPdo = null)
     {
         $this->table = $table;
         $this->conn = Connection::connect();
         $this->whereBuilder = new WhereBuilder();
+        $this->testingPdo = $testingPdo;
     }
 
     /**
@@ -61,16 +63,23 @@ class DeleteBuilder extends Builder
      *
      * @param string $column The column to be used in the where clause.
      * @param string $operator The operator to be used in the where clause.
-     * @param mixed $value The value to be used in the where clause.
+     * @param mixed $value The value to be used in the where clauseP
      * @return void
      */
-    public function where(string $column, string $operator, $value): void
+    public function where(string $column, string $operator, $value): DeleteBuilder
     {
         $this->whereBuilder->where($column, $operator, $value);
 
         $this->executeDelete();
+
+        return $this;
     }
 
+    /**
+     * Executes the delete query and returns the number of affected rows.
+     *
+     * @return integer|null
+     */
     private function executeDelete(): ?int
     {
         if (empty($this->whereBuilder->getQuery())) {
@@ -81,13 +90,23 @@ class DeleteBuilder extends Builder
 
         $query = $this->createQuery();
 
-        $stmt = $this->conn->prepare($query);
+        $stmt = null;
+        if($this->testingPdo == null) {
+            $stmt = $this->conn->prepare($query);
+        } else {
+            $stmt = $this->testingPdo->prepare($query);
+        }
 
         $stmt->execute($this->whereParams);
 
         return $stmt->rowCount();
     }
 
+    /**
+     * Creates the SQL query to be executed.
+     * 
+     * @return string
+     */
     private function createQuery(): string
     {
         $whereSql = $this->whereBuilder->getQuery();

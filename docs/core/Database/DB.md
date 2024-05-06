@@ -12,6 +12,7 @@ The DB class provides a static method to create a new instance of the QueryBuild
 Creates a new instance of the QueryBuilder class with the specified table name.
 - Parameters:
   - `$table`: String The name of the database table.
+  - `$pdo`: PDO The PDO instance to be used for the query in test mode.
 - Returns: QueryBuilder An instance of the QueryBuilder class.
 
 

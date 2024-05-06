@@ -27,12 +27,17 @@ The DeleteBuilder class is responsible for building SQL DELETE queries. It allow
 - Type: PDO
 - Description: The PDO database connection.
 
+### $pdo
+- Type: PDO
+- Description: The PDO instance to be used for the query in test mode.
+
 ## Methods
 
 ### __construct(string $table)
 Constructor method to initialize the DeleteBuilder instance with the specified table name.
 - Parameters:
   - `$table`: String The name of the table from which rows will be deleted.
+  -  `$pdo`: PDO The PDO instance to be used for the query in test mode.
 - Returns: Void
 
 ### setWhereParams(array $whereParams): void

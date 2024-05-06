@@ -21,17 +21,19 @@ class UpdateBuilder extends Builder
     protected array $whereParams = [];
     protected WhereBuilder $whereBuilder;
     protected PDO $conn;
+    protected ?PDO $testingPdo; //Var to tests suite
 
     /**
      * InsertBuilder class constructor.
      *
      * @param string $table Name of the table where the insertion will be performed.
      */
-    public function __construct(string $table)
+    public function __construct(string $table, ?PDO $testingPdo = null)
     {
         $this->table = $table;
         $this->conn = Connection::connect();
         $this->whereBuilder = new WhereBuilder();
+        $this->testingPdo = $testingPdo;
     }
 
     /**
@@ -66,13 +68,15 @@ class UpdateBuilder extends Builder
      * @param string $column The column to be used in the where clause.
      * @param string $operator The operator to be used in the where clause.
      * @param mixed $value The value to be used in the where clause.
-     * @return void
+     * @return UpdateBuilder
      */
-    public function where(string $column, string $operator, $value): void
+    public function where(string $column, string $operator, $value): UpdateBuilder
     {
         $this->whereBuilder->where($column, $operator, $value);
 
         $this->executeUpdate();
+
+        return $this;
     }
 
     /**
@@ -91,7 +95,14 @@ class UpdateBuilder extends Builder
         $this->validateValues($this->values);
         $query = $this->createQuery($this->values);
 
-        $stmt = $this->conn->prepare($query);
+
+        $stmt = null;
+        if ($this->testingPdo == null) {
+            $stmt = $this->conn->prepare($query);
+        } else {
+            $stmt = $this->testingPdo->prepare($query);
+        }
+
         $stmt->execute(array_merge(array_values($this->values), $this->whereParams));
 
         return $stmt->rowCount();
