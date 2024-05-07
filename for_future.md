@@ -19,7 +19,7 @@
 - [] Authentication class
 - [] Session class
 - [] Cookie class
-- [] File Upload class
 - [] Cache(Only Redis)
+- [] File Upload class
 - [] Template Engine
 - [] Email class

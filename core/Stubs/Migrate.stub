@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use Yui\Core\Database\Migration;
+
+return new class extends Migration
+{
+	public string $table = '@table@';
+
+	@start-create@
+	public array $columns = [
+		'id' => 'int unsigned auto_increment primary key',
+		'created_at' => 'timestamp default CURRENT_TIMESTAMP',
+		'updated_at' => 'timestamp default CURRENT_TIMESTAMP on_update CURRENT_TIMESTAMP',
+	];
+	@end-create@
+
+	@start-alter@
+	public function alter($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' add column `name` varchar(255) not null');
+	}
+	@end-alter@
+
+	@start-renameColumn
+	public function renameColumn($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' change `old_name` `new_name` varchar(255) not null');
+	}
+	@end-renameColumn@
+
+	@start-dropColumn@
+	public function dropColumn($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' drop column `name`');
+	}
+	@end-dropColumn@
+
+	@start-addIndex@
+	public function addIndex($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' add index `name` (`name`)');
+	}
+	@end-addIndex@
+
+	@start-dropIndex@
+	public function dropIndex($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' drop index `name`');
+	}
+	@end-dropIndex@
+
+	@start-addUnique@
+	public function addUnique($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' add unique `name` (`name`)');
+	}
+	@end-addUnique@
+
+	@start-dropUnique@
+	public function dropUnique($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' drop index `name`');
+	}
+	@end-dropUnique@
+
+	@start-addForeignKey@
+	public function addForeignKey($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' add constraint `name` foreign key (`name`) references `table` (`name`) on delete cascade');
+	}
+	@end-addForeignKey@
+
+	@start-dropForeignKey@
+	public function dropForeignKey($sql)
+	{
+		$sql->add('alter table ' . $this->table . ' drop foreign key `name`');
+	}
+	@end-dropForeignKey@
+};
