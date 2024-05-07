@@ -4,48 +4,52 @@ declare(strict_types=1);
 
 namespace Yui\Core\Database\Migrations;
 
+use PDO;
 use Yui\Core\Database\Connection;
 
 class MigrationRunner
 {
-	private static array $avaliableMethods = [
-		'alterTable',
-		'raw',
-	];
+	private static function hasRun(string $migration): bool
+	{
+		$conn = Connection::connect();
+		$stmt = $conn->prepare("SELECT * FROM migrations_history WHERE name = :name");
+		$stmt->execute([':name' => $migration]);
 
-	public static function run()
+		return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+	}
+
+	private static function markAsRun(string $migration): void
+	{
+		$conn = Connection::connect();
+		$stmt = $conn->prepare("INSERT INTO migrations_history (name) VALUES (:name)");
+		$stmt->execute([':name' => $migration]);
+	}
+
+	public static function run(): void
 	{
 		$migrations = glob('app/Database/Migrations/*.php');
 
 		foreach ($migrations as $migration) {
+			echo basename($migration) . PHP_EOL;
+
+			if(basename($migration) === '0000_create_core_tables.php') {
+				$migrationInstance = include $migration;
+				$migrationInstance->up();
+
+				self::markAsRun($migration);
+			}
+
+			if (basename($migration) !== '0000_create_core_tables.php') {
+				echo "Running migration: $migration\n";
+				if(self::hasRun($migration)){
+					continue;
+				}
+			}
+
 			$migrationInstance = include $migration;
+			$migrationInstance->up();
 
-			if ($migrationInstance->table == null) {
-				throw new \Exception("Table name is required");
-			}
-
-			$migrationInstance->setColumns();
-
-			if (!empty($migrationInstance->columns)) {
-				$sql = $migrationInstance->create();
-			} else {
-				foreach (self::$avaliableMethods as $method) {
-					if (method_exists($migrationInstance, $method)) {
-						$sql = $migrationInstance->$method();
-					}
-				}
-			}
-
-			if (!empty($sql)) {
-				$conn = Connection::connect();
-
-				try {
-					$conn->exec($sql);
-				} catch (\PDOException $e) {
-					echo $e->getMessage() . PHP_EOL;
-					die();
-				}
-			}
+			self::markAsRun($migration);
 		}
 	}
 
@@ -54,15 +58,26 @@ class MigrationRunner
 		$migrations = glob('app/Database/Migrations/*.php');
 
 		foreach ($migrations as $migration) {
-			require_once $migration;
+			echo basename($migration) . PHP_EOL;
 
-			$className = basename($migration, '.php');
+			if(basename($migration) === '0000_create_core_tables.php') {
+				$migrationInstance = include $migration;
+				$migrationInstance->down();
 
-			$className = "App\\Database\\Migrations\\$className";
+				self::markAsRun($migration);
+			}
 
-			$migration = new $className;
+			if (basename($migration) !== '0000_create_core_tables.php') {
+				echo "Running migration: $migration\n";
+				if(self::hasRun($migration)){
+					continue;
+				}
+			}
 
-			$migration->rollback();
+			$migrationInstance = include $migration;
+			$migrationInstance->down();
+
+			self::markAsRun($migration);
 		}
 	}
 }
