@@ -8,9 +8,6 @@ class MigrationRunner
 {
 	private static array $avaliableMethods = [
 		'alterTable',
-		'dropColumn',
-		'renameColumn',
-		'renameTable',
 		'raw',
 	];
 
@@ -19,7 +16,6 @@ class MigrationRunner
 		$migrations = glob('app/Database/Migrations/*.php');
 
 		foreach ($migrations as $migration) {
-			echo "Running migration: $migration" . PHP_EOL;
 			$migrationInstance = include $migration;
 
 			try {

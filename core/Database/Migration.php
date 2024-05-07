@@ -33,21 +33,6 @@ abstract class Migration
 	public function alterTable(){}
 
 	/**
-	 * Drop a column
-	 */
-	public function dropColumn(){}
-
-	/**
-	 * Rename a column
-	 */
-	public function renameColumn(){}
-
-	/**
-	 * Rename a table
-	 */
-	public function renameTable(){}
-
-	/**
 	 * Run a raw query
 	 */
 	public function raw(string $sql){}
