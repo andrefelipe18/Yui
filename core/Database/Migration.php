@@ -7,38 +7,27 @@ namespace Yui\Core\Database;
 abstract class Migration
 {
 	public string $table;
-	public array $columns;
+	public array $columns = [];
 
-	/**
-	 * Create a new table
-	 */
-	public function create(){
-		$columns = implode(', ', array_map(function ($column, $type) {
-			return "$column $type";
-		}, array_keys($this->columns), $this->columns));
-
-		$sql = "CREATE TABLE IF NOT EXISTS {$this->table} ($columns)";
-
-		return $sql;
+	public function setColumns()
+	{
+		$this->columns = [];
 	}
 
-	/**
-	 * Set columns
-	 */
-	public function setColumns(){}
+	public function create()
+	{
+		$columns = implode(', ', $this->columns);
+		return "CREATE TABLE IF NOT EXISTS {$this->table} ($columns)";
+	}
 
-	/**
-	 * Alter a table
-	 */
-	public function alterTable(){}
+	public function alterTable()
+	{
+		$columns = implode(', ', $this->columns);
+		return "ALTER TABLE {$this->table} ADD COLUMN $columns";
+	}
 
-	/**
-	 * Run a raw query
-	 */
-	public function raw(string $sql){}
-
-	/**
-	 * Rollback a migration
-	 */
-	public function down(){}
+	public function raw()
+	{
+		return '';
+	}
 }

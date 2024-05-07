@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Yui\Core\Database;
+namespace Yui\Core\Database\Migrations;
+
+use Yui\Core\Database\Connection;
 
 class MigrationRunner
 {
