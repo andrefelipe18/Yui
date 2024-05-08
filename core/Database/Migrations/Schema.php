@@ -60,7 +60,7 @@ class Schema
     {
         self::executeQuery($sql);
     }
-
+    
     /**
      * Drop a table
      * 
