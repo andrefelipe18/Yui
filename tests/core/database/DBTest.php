@@ -214,3 +214,16 @@ test('Testing if the raw method correctly executes a raw query.', function () {
 
 	$this->assertEquals('John Doe', $users[0]['name']);
 });
+
+test('Testing if the upsert method correctly inserts data into the database.', function () {
+	DB::table('users', $this->pdo)
+		->upsert(['name' => 'John Doe'], ['name'], ['name']);
+
+	$users = DB::table('users', $this->pdo)
+		->select('name', 'id')
+		->get();
+
+	// var_dump($users);
+
+	$this->assertEquals('John Doe', $users[0]->name);
+});

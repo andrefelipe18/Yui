@@ -15,6 +15,7 @@ use Yui\Core\Database\Builders\UpdateBuilder;
 use Yui\Core\Database\Builders\DeleteBuilder;
 use Yui\Core\Database\Builders\OrderByBuilder;
 use Yui\Core\Database\Builders\LimitBuilder;
+use Yui\Core\Database\Builders\UpsertBuilder;
 
 /**
  * @package Yui\Core\Database
@@ -27,6 +28,7 @@ use Yui\Core\Database\Builders\LimitBuilder;
  * @method QueryBuilder leftJoin(string $table, string $column1, string $operator, string $column2)
  * @method QueryBuilder insert(array<string, mixed> $values)
  * @method QueryBuilder update(array<string, mixed> $values)
+ * @method QueryBuilder upsert(array<string, mixed> $values, array<string> $uniqueKeys, array<string> $updateColumns)
  * @method QueryBuilder delete()
  * @method QueryBuilder orderBy(string $column, string $order = 'ASC')
  * @method QueryBuilder limit(int $limit)
@@ -53,6 +55,7 @@ class QueryBuilder
             'join' => new JoinBuilder(),
             'insert' => new InsertBuilder($table, $testingPdo),
             'update' => new UpdateBuilder($table, $testingPdo),
+            'upsert' => new UpsertBuilder($table, $testingPdo),
             'delete' => new DeleteBuilder($table, $testingPdo),
             'orderBy' => new OrderByBuilder(),
             'limit' => new LimitBuilder(),
@@ -81,7 +84,7 @@ class QueryBuilder
         foreach ($this->builders as $builderName => $builder) {
             if (method_exists($builder, $method)) {
                 $this->currentBuilder = $builder; // Change the context
-                if($method === 'insert' || $method === 'update' || $method === 'delete') {
+                if($method === 'insert' || $method === 'update' || $method === 'delete' || $method === 'upsert') {
                     $builder->$method(...$params);
                     return $this;
                 } else {
