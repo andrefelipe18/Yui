@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Yui\Core\Database\DB;
 
-
 beforeEach(function () {
 	$this->pdo = new PDO('sqlite::memory:');
 	$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
