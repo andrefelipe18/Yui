@@ -21,10 +21,10 @@ class Blueprint
     public array $columns = [];
     private TimestampsStrategyInterface $timestampsStrategy;
 
-    public function __construct(string $table)
+    public function __construct(string $table, ?TimestampsStrategyInterface $timestampsStrategy = null)
     {
         $this->table = $table;
-        $this->timestampsStrategy = $this->getTimestampsStrategy();
+        $this->timestampsStrategy = $timestampsStrategy ?? $this->getTimestampsStrategy();
     }
 
     /**

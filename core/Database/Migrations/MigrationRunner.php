@@ -9,8 +9,6 @@ use Yui\Core\Database\Connection;
 use Yui\Core\Database\DB;
 use Yui\Core\Helpers\Dotenv;
 
-use function PHPUnit\Framework\throwException;
-
 class MigrationRunner
 {
     /**
