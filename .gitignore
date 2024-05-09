@@ -17,7 +17,7 @@ mysqlInit
 pgsqlInit
 
 # My personal notes
-notes.md
+notes*.md
 
 # Dev Tools
 .php-cs-fixer.cache

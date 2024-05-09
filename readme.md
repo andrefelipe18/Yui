@@ -2,6 +2,11 @@
 
 Yui is a modern, elegant, and mini PHP framework inspired by Laravel. Developed to streamline the process of building high-quality web applications, Yui offers a flexible and intuitive framework for developers.
 
+## Roadmap
+
+Yui is a work in progress, and we have a lot of exciting features planned for the future. Here's a brief overview of what's coming:
+[Roadmap](for_future.md)
+
 ## Key Features
 
 - **Simplicity and Elegance**: Yui adopts a clear and elegant syntax, making development simpler and more enjoyable.
@@ -31,11 +36,6 @@ cd yui
 composer install
 #....
 ```
-
-## Roadmap
-
-Yui is a work in progress, and we have a lot of exciting features planned for the future. Here's a brief overview of what's coming:
-[Roadmap](for_future.md)
 
 ## Contributing
 
