@@ -4,7 +4,7 @@ Yui was born as a way to keep motivated to study PHP outside of laravel, since 2
 
 This mini framework made from the heart has helped me understand how Laravel processes work behind the scenes.
 
-- [] Database
+- [ ] Database
     - [x] Connection
         - [x] MySQL
         - [x] PostgreSQL
@@ -21,21 +21,21 @@ This mini framework made from the heart has helped me understand how Laravel pro
         - [x] Limit
         - [x] Raw Query
         - [x] Update Or Insert (Upsert)
-    - [] Migration
-    - [] Seeders
-- [] Command Line Interface
-- [] Logger
-- [] FrankenPHP
-- [] File routing system
-- [] Middleware
-- [] Validation class
-- [] Authentication class
-- [] Session class
-- [] Cookie class
-- [] Cache(Only Redis)
-- [] File Upload class
-- [] Template Engine
-- [] Email class
-- [] Queue class (Only Redis)
-- [] Event class
-- [] WebSockets (With FrankenPHP)
+    - [ ] Migration
+    - [ ] Seeders
+- [ ] Command Line Interface
+- [ ] Logger
+- [ ] FrankenPHP
+- [ ] File routing system
+- [ ] Middleware
+- [ ] Validation class
+- [ ] Authentication class
+- [ ] Session class
+- [ ] Cookie class
+- [ ] Cache(Only Redis)
+- [ ] File Upload class
+- [ ] Template Engine
+- [ ] Email class
+- [ ] Queue class (Only Redis)
+- [ ] Event class
+- [ ] WebSockets (With FrankenPHP)
