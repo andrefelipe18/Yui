@@ -7,101 +7,190 @@ namespace Yui\Core\Database\Migrations;
 use PDO;
 use Yui\Core\Database\Connection;
 use Yui\Core\Database\DB;
+use Yui\Core\Helpers\Dotenv;
+
+use function PHPUnit\Framework\throwException;
 
 class MigrationRunner
 {
-	private static function hasRun(string $migration)
-	{
-		$migrationName = basename($migration);
+    /**
+     * Run the migrations
+     * @throws \Exception if no migrations are found
+     * @return void
+     */
+    public static function run(): void
+    {
+        if (!self::migrationsTableExists()) {
+            self::createMigrationsTable();
+        }
 
-		$result = DB::table('migrations')
-			->select('migrate')
-			->where('migrate', '=', $migrationName)
-			->get();
+        $migrations = glob('app/Database/Migrations/*.php');
 
-		return count($result) > 0 ? true : false;
-	}
+        if(!$migrations) {
+            throw new \Exception("No migrations found");
+        }
 
-	private static function markAsRun(string $migration): void
-	{
-		DB::table('migrations')->insert([
-			'migrate' => basename($migration),
-			'created_at' => date('Y-m-d H:i:s'),
-		]);
-	}
+        foreach ($migrations as $migration) {
+            if (self::hasRun($migration)) {
+                continue;
+            }
 
-	public static function run(): void
-	{
-		if (!self::migrationsTableExists()) {
-			self::createMigrationsTable();
-		}
+            echo "Running migration {$migration}..." . PHP_EOL;
+            $migrationInstance = include $migration;
+            $migrationInstance->up();
+            echo "OK" . PHP_EOL;
 
-		$migrations = glob('app/Database/Migrations/*.php');
+            self::markAsRun($migration);
+        }
+    }
 
-		foreach ($migrations as $migration) {
-			if (self::hasRun($migration)) {
-				continue;
-			}
+    /**
+     * Rollback the migrations
+     * @throws \Exception if no migrations are found
+     * @return void
+     */
+    public static function rollback(): void
+    {
+        if (!self::migrationsTableExists()) {
+            echo "Migrations table does not exist.\n";
+            return;
+        }
 
-			echo "Running migration {$migration}..." . PHP_EOL;
-			$migrationInstance = include $migration;
-			$migrationInstance->up();
-			echo "OK" . PHP_EOL;
+        $migrations = glob('app/Database/Migrations/*.php');
 
-			self::markAsRun($migration);
-		}
-	}
+        if(!$migrations) {
+            throw new \Exception("No migrations found");
+        }
 
-	private static function migrationsTableExists(): bool
-	{
-		$conn = Connection::connect();
+        $migrations = array_reverse($migrations);
 
-		$statement = $conn->prepare("SHOW TABLES LIKE 'migrations'");
+        foreach ($migrations as $migration) {
+            if (!self::hasRun($migration)) {
+                continue;
+            }
 
-		$statement->execute();
+            echo "Rollback migration {$migration}..." . PHP_EOL;
+            $migrationInstance = include $migration;
+            $migrationInstance->down();
+            echo "OK" . PHP_EOL;
 
-		$result = $statement->fetch(PDO::FETCH_ASSOC);
+            self::markAsRolledBack($migration);
+        }
+    }
 
-		return $result ? true : false;
-	}
+    /**
+     * Verify if a migration has been run
+     * @param string $migration
+     * @return bool
+     */
+    private static function hasRun(string $migration): bool
+    {
+        $migrationName = basename($migration);
 
-	private static function createMigrationsTable(): void
-	{
-		$sql = "CREATE TABLE migrations (
-			id INT AUTO_INCREMENT PRIMARY KEY,
-			migrate VARCHAR(255) NOT NULL,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		)";
+        $result = DB::table('migrations')
+            ->select('migrate')
+            ->where('migrate', '=', $migrationName)
+            ->andWhere('state', '=', 'up')
+            ->get();
 
-		$conn = Connection::connect();
+        return count($result) > 0 ? true : false;
+    }
 
-		$statement = $conn->prepare($sql);
+    /**
+     * Mark the state of a migration
+     * @param string $migration
+     * @param string $state
+     * @return void
+     */
+    private static function markMigrationState(string $migration, string $state): void
+    {
+        DB::table('migrations')->upsert([
+            'migrate' => basename($migration),
+            'state' => $state,
+            'created_at' => date('Y-m-d H:i:s'),
+        ], ['migrate'], ['state']);
+    }
 
-		$statement->execute();
-	}
+    /**
+     * Mark a migration as run
+     * @param string $migration
+     * @return void
+     */
+    private static function markAsRun(string $migration): void
+    {
+        self::markMigrationState($migration, 'up');
+    }
 
-	public static function rollback()
-	{
-		$migrations = glob('app/Database/Migrations/*.php');
+    /**
+     * Mark a migration as rolled back
+     * @param string $migration
+     * @return void
+     */
+    private static function markAsRolledBack(string $migration): void
+    {
+        self::markMigrationState($migration, 'down');
+    }
 
-		foreach ($migrations as $migration) {
-			echo basename($migration) . PHP_EOL;
+    /**
+     * Verify if the migrations table exists
+     * @return bool
+     */
+    private static function migrationsTableExists(): bool
+    {
+        Dotenv::load();
+        $driver = Dotenv::get('DATABASE_CONNECTION');
+        $conn = Connection::connect();
 
-			if (basename($migration) === '0000_create_core_tables.php') {
-				continue;
-			}
+        switch ($driver) {
+            case 'sqlite':
+                $statement = $conn->prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='migrations'");
+                break;
+            case 'mysql':
+                $statement = $conn->prepare("SHOW TABLES LIKE 'migrations'");
+                break;
+            case 'pgsql':
+                $statement = $conn->prepare("SELECT * FROM information_schema.tables WHERE table_name = 'migrations'");
+                break;
+            default:
+                echo "Unsupported database driver\n";
+                exit;
+        }
 
-			if (basename($migration) !== '0000_create_core_tables.php') {
-				echo "Running migration: $migration\n";
-				if (self::hasRun($migration)) {
-					continue;
-				}
-			}
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_ASSOC) !== false;
+    }
 
-			$migrationInstance = include $migration;
-			$migrationInstance->down();
+    /**
+     * Create the migrations table
+     * @return void
+     */
+    private static function createMigrationsTable(): void
+    {
+        Dotenv::load();
+        $driver = Dotenv::get('DATABASE_CONNECTION');
+        if ($driver === 'sqlite' || $driver === 'mysql') {
+            $sql = "CREATE TABLE migrations (
+				id INT AUTO_INCREMENT PRIMARY KEY,
+				migrate VARCHAR(255) NOT NULL,
+				state VARCHAR(255) NOT NULL DEFAULT 'up',
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)";
+        } elseif ($driver === 'pgsql') {
+            $sql = "CREATE TABLE migrations (
+				id SERIAL PRIMARY KEY,
+				migrate VARCHAR(255) NOT NULL,
+				state VARCHAR(255) NOT NULL DEFAULT 'up',
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)";
+        } else {
+            echo "Unsupported database driver\n";
+            exit;
+        }
 
-			self::markAsRun($migration);
-		}
-	}
+        $conn = Connection::connect();
+
+        $statement = $conn->prepare($sql);
+
+        $statement->execute();
+    }
 }

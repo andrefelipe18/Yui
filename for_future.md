@@ -36,3 +36,6 @@ This mini framework made from the heart has helped me understand how Laravel pro
 - [] File Upload class
 - [] Template Engine
 - [] Email class
+- [] Queue class (Only Redis)
+- [] Event class
+- [] WebSockets (With FrankenPHP)

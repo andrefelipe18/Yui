@@ -13,7 +13,7 @@ class Schema
 {
     /**
      * Create a new table
-     * 
+     *
      * @param string $table
      * @param callable $callback
      * @return void
@@ -31,7 +31,7 @@ class Schema
 
     /**
      * Update a table
-     * 
+     *
      * @param string $table
      * @param callable $callback
      * @return void
@@ -52,7 +52,7 @@ class Schema
 
     /**
      * Execute a raw SQL query
-     * 
+     *
      * @param string $sql
      * @return void
      */
@@ -60,14 +60,14 @@ class Schema
     {
         self::executeQuery($sql);
     }
-    
+
     /**
      * Drop a table
-     * 
+     *
      * @param string $table
      * @return void
      */
-    public static function dropIfExists(string $table)
+    public static function dropIfExists(string $table): void
     {
         $sql = "DROP TABLE IF EXISTS $table";
 
@@ -76,7 +76,7 @@ class Schema
 
     /**
      * Execute a query
-     * 
+     *
      * @param string $sql
      * @return void
      */

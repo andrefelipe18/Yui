@@ -19,5 +19,8 @@ pgsqlInit
 # My personal notes
 notes*.md
 
+# App files
+app/
+
 # Dev Tools
 .php-cs-fixer.cache

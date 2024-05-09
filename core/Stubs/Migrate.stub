@@ -15,6 +15,12 @@ return new class
 			$table->timestamps();
 		});
 		@endcreate@
+
+		@alter@
+		Schema::table('@@table@@', function(Blueprint $table){
+			$table->raw('ALTER TABLE @@table@@ ADD COLUMN @@column@@');
+		});
+		@endalter@
 	}
 
 	public static function down()
@@ -22,5 +28,9 @@ return new class
 		@create@
 		Schema::dropIfExists('@@table@@');
 		@endcreate@
+
+		@alter@
+		Schema::raw('ALTER TABLE @@table@@ DROP COLUMN @@column@@');
+		@endalter@
 	}
 };
