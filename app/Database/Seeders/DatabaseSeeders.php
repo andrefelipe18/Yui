@@ -6,15 +6,18 @@ use Yui\Core\Database\Seeder;
 
 class DatabaseSeeders
 {
-	public static function run()
+	public Seeder $seeder = new Seeder();
+
+	public function run()
 	{
-		(new Seeder)->seed(
-			'users',
+		$this->seeder
+		->table('users')
+		->columns(
 			[
-				'name' => 'fake name',
-				'email' => 'fake mail'
+				'name' => 'Fake Name',
 			]
-		)->repeat(5)
+		)
+		->repeat(1)
 		->exec();
 	}
 }
