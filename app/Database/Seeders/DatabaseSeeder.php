@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
 		->table('users')
 		->columns(
 			[
-				'name' => $this->faker->name(),
+				'name' => fn() => $this->faker->name(),
 			]
 		)
-		->repeat(1)
+		->repeat(10)
 		->exec();
 
 		

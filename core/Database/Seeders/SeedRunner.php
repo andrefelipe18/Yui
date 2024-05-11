@@ -6,7 +6,7 @@ class SeedRunner
 {
 	public static function run()
 	{
-		$seeders = glob('app/Database/Seeders*.php');
+		$seeders = glob('app/Database/Seeders/*.php');
 
 		if(!$seeders) {
 			throw new \Exception("No seeders found");
@@ -15,7 +15,7 @@ class SeedRunner
         foreach ($seeders as $seeder) {
             echo "Running seeder {$seeder}..." . PHP_EOL;
 
-            $className = 'App\\Database\\Seeders' . basename($seeder, '.php');
+            $className = 'App\\Database\\Seeders\\' . basename($seeder, '.php');
 
             // Instantiate the seeder class
             $seederInstance = new $className();
