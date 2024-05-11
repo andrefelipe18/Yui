@@ -27,5 +27,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "require": {
+        "fakerphp/faker": "^1.23"
     }
 }
