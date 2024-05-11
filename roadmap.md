@@ -4,7 +4,7 @@ Yui was born as a way to keep motivated to study PHP outside of laravel, since 2
 
 This mini framework made from the heart has helped me understand how Laravel processes work behind the scenes.
 
-- [ ] Database
+- [x] Database
     - [x] Connection
         - [x] MySQL
         - [x] PostgreSQL
@@ -21,8 +21,8 @@ This mini framework made from the heart has helped me understand how Laravel pro
         - [x] Limit
         - [x] Raw Query
         - [x] Update Or Insert (Upsert)
-    - [ ] Migration
-    - [ ] Seeders
+    - [x] Migration
+    - [x] Seeders
 - [ ] Command Line Interface
 - [ ] Logger
 - [ ] FrankenPHP

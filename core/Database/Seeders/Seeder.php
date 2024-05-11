@@ -1,94 +1,121 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yui\Core\Database\Seeders;
 
-use Faker\Factory;
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use Faker\Factory as Faker;
+use Faker\Generator;
+use PDO;
+use PDOStatement;
 use Yui\Core\Database\Connection;
 
+/**
+ * Class Seeder
+ * @package Yui\Core\Database\Seeders
+ */
 class Seeder
 {
-	public string $table = '';
-	public int $repeat = 1;
-	/** * @var array<string, mixed> */
-	public array $columns = [];
-	/** * @var \Faker\Generator */
-	public $faker;
-	private \PDO $conn;
+    public string $table = '';
+    public int $repeat = 1;
 
-	public function __construct()
-	{
-		$this->faker = Factory::create();
-		$this->conn = Connection::connect();
-	}
+    /** @var array<string, callable> */
+    public array $columns = [];
+    /** @var Generator */
+    public $faker;
+    private PDO $conn;
 
-	public function seed()
-	{
-		return $this;
-	}
+    public function __construct()
+    {
+        $this->faker = Faker::create();
+        $this->conn = Connection::connect();
+    }
 
-	public function table(string $table)
-	{
-		if (!is_string($table)) {
-			throw new \Exception('Table name must be a string');
-		}
+    /**
+     * Function to start seeding
+     * @return Seeder $this
+     */
+    public function seed(): self
+    {
+        return $this;
+    }
 
-		$this->table = $table;
-		return $this;
-	}
+    /**
+     * Function to set table name
+     * @param string $table
+     * @return Seeder $this
+     */
+    public function table(string $table): self
+    {
+        $this->table = $table;
+        return $this;
+    }
 
-	public function columns(array $columns)
-	{
-		if (!is_array($columns)) {
-			throw new \Exception('Columns must be an array');
-		}
+    /**
+     * Function to set columns
+     * @param array<string, callable> $columns
+     * @return Seeder $this
+     */
+    public function columns(array $columns): self
+    {
+        $this->columns = $columns;
+        return $this;
+    }
 
-		$this->columns = $columns;
-		return $this;
-	}
+    /**
+     * Function to set repeat
+     * @param int $time
+     * @return Seeder $this
+     */
+    public function repeat(int $time): self
+    {
+        $this->repeat = $time;
+        return $this;
+    }
 
-	public function repeat(int $time)
-	{
-		if (!is_int($time)) {
-			throw new \Exception('Repeat must be an integer');
-		}
+    /**
+     * Function to execute the seeding
+     * @throws \Exception
+     * @return void
+     */
+    public function exec(): void
+    {
+        $this->checkTableAndColumns();
 
-		$this->repeat = $time;
-		return $this;
-	}
+        $stmt = $this->prepareStatement();
 
-	public function exec()
-	{
-		if (empty($this->table)) {
-			throw new \Exception('Table name must be provided');
-		} else if (empty($this->columns)) {
-			throw new \Exception('Columns must be provided');
-		}
+        for ($i = 0; $i < $this->repeat; $i++) {
+            echo "Seeding {$this->table} table..." . PHP_EOL;
+            $values = array_map(fn ($func) => $func(), $this->columns);
+            $stmt->execute($values);
+        }
+    }
 
-		$stmt = $this->conn->prepare($this->getQuery());
+    /**
+     * Function to prepare the statement
+     * @return PDOStatement
+     */
+    private function prepareStatement(): PDOStatement
+    {
+        $columns = array_keys($this->columns);
+        $placeholders = implode(", ", array_fill(0, count($this->columns), '?'));
 
-		for ($i = 0; $i < $this->repeat; $i++) {
-			echo "Seeding {$this->table} table..." . PHP_EOL;
+        $query = "INSERT INTO $this->table (" . implode(", ", $columns) . ") VALUES ($placeholders)";
 
-			$values = array_map(function ($func) {
-				return $func();
-			}, $this->columns);
+        return $this->conn->prepare($query);
+    }
 
-			$values = array_values($values);
-			$stmt->execute($values);
-		}
-	}
-
-	private function getQuery()
-	{
-		$columns = array_keys($this->columns);
-		$values = array_values($this->columns);
-
-		$columnList = implode(", ", $columns);
-		$placeholders = implode(", ", array_fill(0, count($values), '?'));
-
-		$query = "INSERT INTO $this->table ($columnList) VALUES ($placeholders)";
-
-		return $query;
-	}
+    /**
+     * Function to check table and columns
+     * @throws \Exception
+     * @return void
+     */
+    private function checkTableAndColumns(): void
+    {
+        if (empty($this->table)) {
+            throw new \Exception('Table name must be provided');
+        } elseif (empty($this->columns)) {
+            throw new \Exception('Columns must be provided');
+        }
+    }
 }
