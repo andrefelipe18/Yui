@@ -2,22 +2,22 @@
 
 namespace App\Database\Seeders;
 
-use Yui\Core\Database\Seeder;
+use Yui\Core\Database\Seeders\Seeder;
 
-class DatabaseSeeders
+class DatabaseSeeder extends Seeder
 {
-	public Seeder $seeder = new Seeder();
-
 	public function run()
 	{
-		$this->seeder
+		$this->seed()
 		->table('users')
 		->columns(
 			[
-				'name' => 'Fake Name',
+				'name' => $this->faker->name(),
 			]
 		)
 		->repeat(1)
 		->exec();
+
+		
 	}
 }

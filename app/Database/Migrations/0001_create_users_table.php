@@ -12,7 +12,6 @@ return new class
 		Schema::create('users', function(Blueprint $table){
 			$table->column('id INT AUTO_INCREMENT PRIMARY KEY');
 			$table->column('name VARCHAR(255) NOT NULL');
-			$table->column('email VARCHAR(255) NOT NULL');
 			$table->timestamps();
 		});
 	}
