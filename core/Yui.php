@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yui\Core;
 
 use Yui\Core\Database\DatabaseInitializer;
+use Yui\Core\Helpers\Dotenv;
 
 class Yui
 {
@@ -28,6 +29,7 @@ class Yui
         echo "Booting the application...\n";
 
         DatabaseInitializer::init();
+        Dotenv::load();
 
         echo "The application has been booted.\n";
     }
