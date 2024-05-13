@@ -23,7 +23,7 @@ This mini framework made from the heart has helped me understand how Laravel pro
         - [x] Update Or Insert (Upsert)
     - [x] Migration
     - [x] Seeders
-- [ ] Command Line Interface
+- [ ] Command Line Interface (In Progress)
 - [ ] Logger
 - [ ] FrankenPHP
 - [ ] File routing system
