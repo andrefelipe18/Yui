@@ -1,12 +1,20 @@
 <?php
-
+/**
+ * This file is the entry point for the console application.
+ */
 declare(strict_types=1);
 
 require './vendor/autoload.php';
 
-use Yui\Core\Database\Migrations\MigrationRunner;
-use Yui\Core\Database\Seeders\SeedRunner;
+use Yui\Core\Console\Kernel;
 
+$arguments = $_SERVER['argv'];
+
+$kernel = new Kernel($argv);
+
+$kernel->boot();
+
+/**
 if(empty($argv[1])){
     echo "No args" . PHP_EOL;
     die();
@@ -46,3 +54,4 @@ if($argv[1] === 'db:seed'){
     SeedRunner::run();
     echo "Seeding completed.\n";
 }
+*/
