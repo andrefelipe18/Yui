@@ -16,7 +16,11 @@ class Kernel
 	public function boot()
 	{
 		if (count($this->arguments) < 2) {
-			(new ConsolePrinter)->text('Welcome to Yui Console', color: 'red', bold: true)->print();
+			(new ConsolePrintter)
+				->title(' Yui Console ', color: 'black', backgroundColor: 'cyan')
+				->breakLine()
+				->text('Welcome to Yui Console', color: 'white')
+				->print();
 		}
 		// self::registerCommands();
 		// self::runCommand();
