@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yui\Core\Database\Seeders;
 
+use SebastianBergmann\Environment\Console;
+use Yui\Core\Console\ConsolePrintter;
+
 /**
  * Class SeedRunner
  * @package Yui\Core\Database\Seeders
@@ -26,9 +29,10 @@ class SeedRunner
         foreach ($seeders as $seeder) {
             try {
                 self::runSeeder($seeder);
-                echo "Seeder {$seeder} ran successfully\n";
+                (new ConsolePrintter)->text("Seeder {$seeder} ran successfully", 'green')->print();
             } catch (\Exception $e) {
-                echo "Failed to run seeder {$seeder}: {$e->getMessage()}\n";
+                throw $e;
+                (new ConsolePrintter)->text("Seeder {$seeder} failed: {$e->getMessage()}", 'red')->print();
             }
         }
     }
