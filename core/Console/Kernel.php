@@ -7,7 +7,7 @@ namespace Yui\Core\Console;
 class Kernel
 {
     public array $arguments = [];
-    public ConsolePrintter $printer;
+    private ConsolePrintter $printer;
 
     public function __construct(array $arguments)
     {
@@ -17,52 +17,33 @@ class Kernel
 
     public function boot()
     {
-        if (count($this->arguments) < 2) {
-            $this->printer
-                ->text('Usage:', color: 'white')
-                ->text('  php yui [command]', color: 'white')
-                ->text('  php yui [command] [options]', color: 'white')
-                ->text('  php yui [command] [options] [arguments]', color: 'white')
-                ->print();
-
-
-            $this->printer
-                ->breakLine()
-                ->error('No command provided.')
-                ->print();
-
-            $this->printer
-                ->breakLine()
-                ->info('Available commands:')
-                ->print();
-
-            $this->printer
-                ->breakLine()
-                ->success('Available commands:')
-                ->print();
-
-            $this->printer
-                ->breakLine()
-                ->warning('Available commands:')
-                ->print();
-
-            $this->printer
-                ->breakLine()
-                ->log('Available commands:')
-                ->print();
+        if (count($this->arguments) < 2 || $this->arguments[1] === 'help') {
+            $this->runCommand('Yui\Core\Commands\Help');
+            return;
         }
 
-        // self::registerCommands();
-        // self::runCommand();
+        $command = $this->arguments[1];
+        $namespace = 'Yui\Core\Commands';
+        $commandParts = explode(':', $command);
+
+        try {
+            $commandName = ucfirst($commandParts[0]);
+            $commandAction = count($commandParts) > 1 ? ucfirst($commandParts[1]) : $commandName;
+            $commandNamespace = $this->buildCommandNamespace($namespace, $commandName, $commandAction);
+            $this->runCommand($commandNamespace);
+        } catch (\Error $e) {
+            $this->printer->text('Invalid command! Use yui help to see the available commands', 'red')->print();
+        }
     }
 
-    //Registrar os comandos
-    public function registerCommands()
+    private function buildCommandNamespace(string $namespace, string $commandName, string $commandAction): string
     {
+        return $namespace . '\\' . $commandName . '\\' . $commandAction;
     }
 
-    //Executar o comando solicitado
-    public function runCommand()
+    private function runCommand(string $commandNamespace): void
     {
+        $commandInstance = new $commandNamespace();
+        $commandInstance->run();
     }
 }

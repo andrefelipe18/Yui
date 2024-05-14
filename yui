@@ -26,32 +26,4 @@ if ($argv[1] === 'up') {
     );
     exit;
 }
-
-if($argv[1] === 'migrate'){
-    echo "Starting migration...\n";
-    MigrationRunner::run();
-    echo "Migration completed.\n";
-    exit;
-}
-
-if($argv[1] === 'migrate:rollback'){
-    echo "Starting rollback...\n";
-    MigrationRunner::rollback();
-    echo "Rollback completed.\n";
-    exit;
-}
-
-if($argv[1] === 'migrate:refresh'){
-    echo "Starting refresh...\n";
-    MigrationRunner::rollback();
-    MigrationRunner::run();
-    echo "Refresh completed.\n";
-    exit;
-}
-
-if($argv[1] === 'db:seed'){
-    echo "Starting seeding...\n";
-    SeedRunner::run();
-    echo "Seeding completed.\n";
-}
 */
