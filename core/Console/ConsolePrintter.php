@@ -6,7 +6,7 @@ namespace Yui\Core\Console;
 
 use Yui\Core\Console\Printters\BreakLineConsolePrintter;
 use Yui\Core\Console\Printters\ErrorConsolePrintter;
-use Yui\Core\Console\Printters\HorizontalLineConsolePrintter;
+use Yui\Core\Console\Printters\HorizontalDividerConsolePrintter;
 use Yui\Core\Console\Printters\InfoConsolePrintter;
 use Yui\Core\Console\Printters\LogConsolePrintter;
 use Yui\Core\Console\Printters\SuccessConsolePrintter;
@@ -25,50 +25,50 @@ use Yui\Core\Console\Printters\WarningConsolePrintter;
  * @method Printter error(string $text)
  * @method Printter info(string $text)
  * @method Printter log(string $text)
- * @method Printter horizontalLine()
+ * @method Printter horizontalDivider()
  * @method Printter breakLine()
  */
 class ConsolePrintter
 {
-	public $message = '';
+    public $message = '';
 
-	/** @var array<string, mixed> */
-	protected array $methods = [];
+    /** @var array<string, mixed> */
+    protected array $methods = [];
 
-	public function __construct()
-	{
-		$this->methods = [
-			'text' => new TextConsolePrintter(),
-			'title' => new TitleConsolePrintter(),
-			'success' => new SuccessConsolePrintter(),
-			'warning' => new WarningConsolePrintter(),
-			'error' => new ErrorConsolePrintter(),
-			'info' => new InfoConsolePrintter(),
-			'log' => new LogConsolePrintter(),
-			'horizontalLine' => new HorizontalLineConsolePrintter(),
-			'breakLine' => new BreakLineConsolePrintter(),
-		];
-	}
-	
-	public function __call(string $name, array $arguments): self
-	{	
-		if (array_key_exists($name, $this->methods)) {
-			$this->message .= $this->methods[$name]->$name(...$arguments);
-		} else {
-			throw new \BadMethodCallException("Method {$name} does not exist.");
-		}
+    public function __construct()
+    {
+        $this->methods = [
+            'text' => new TextConsolePrintter(),
+            'title' => new TitleConsolePrintter(),
+            'success' => new SuccessConsolePrintter(),
+            'warning' => new WarningConsolePrintter(),
+            'error' => new ErrorConsolePrintter(),
+            'info' => new InfoConsolePrintter(),
+            'log' => new LogConsolePrintter(),
+            'horizontalDivider' => new HorizontalDividerConsolePrintter(),
+            'breakLine' => new BreakLineConsolePrintter(),
+        ];
+    }
 
-		return $this;
-	}
+    public function __call(string $name, array $arguments): self
+    {
+        if (array_key_exists($name, $this->methods)) {
+            $this->message .= $this->methods[$name]->$name(...$arguments);
+        } else {
+            throw new \BadMethodCallException("Method {$name} does not exist.");
+        }
 
-	public function print(): void
-	{
-		echo $this->message;
-		$this->message = '';
-	}
+        return $this;
+    }
 
-	public function clear(): void
-	{
-		echo "\033[2J\033[;H";
-	}
+    public function print(): void
+    {
+        echo $this->message;
+        $this->message = '';
+    }
+
+    public function clear(): void
+    {
+        echo "\033[2J\033[;H";
+    }
 }
