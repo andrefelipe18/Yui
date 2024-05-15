@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use Yui\Core\Database\Migrations\Blueprint;
+use Yui\Core\Database\Migrations\Schema;
+
+return new class
+{
+	public static function up()
+	{
+		Schema::table('{{$table}}', function(Blueprint $table){
+			$table->raw('ALTER TABLE {{$table}} ADD COLUMN column_name');
+		});
+	}
+
+	public static function down()
+	{
+		Schema::raw('ALTER TABLE {{$table}} DROP COLUMN column_name');
+	}
+};

@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use Yui\Core\Database\Migrations\Blueprint;
+use Yui\Core\Database\Migrations\Schema;
+
+return new class
+{
+	public static function up()
+	{
+		//...
+	}
+
+	public static function down()
+	{
+		//...
+	}
+};
