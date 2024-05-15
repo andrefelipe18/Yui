@@ -11,7 +11,7 @@ use Yui\Core\Database\DB;
 use Yui\Core\Helpers\Dotenv;
 
 class MigrationRunner
-{    
+{
     /**
      * Run the migrations
      * @throws \Exception if no migrations are found
@@ -34,12 +34,12 @@ class MigrationRunner
                 continue;
             }
 
-            (new ConsolePrintter)->text("\nRunning migration")
+            (new ConsolePrintter())->text("\nRunning migration")
             ->text(basename($migration), 'yellow')
             ->print();
             $migrationInstance = include $migration;
             $migrationInstance->up();
-            (new ConsolePrintter)->text("OK", 'black', 'green')->print();
+            (new ConsolePrintter())->text("OK", 'black', 'green')->print();
 
             self::markAsRun($migration);
         }
@@ -60,7 +60,7 @@ class MigrationRunner
         $migrations = glob('app/Database/Migrations/*.php');
 
         if(!$migrations) {
-            (new ConsolePrintter)->error("No migrations found")->print();
+            (new ConsolePrintter())->error("No migrations found")->print();
             throw new \Exception("No migrations found");
         }
 
@@ -71,12 +71,12 @@ class MigrationRunner
                 continue;
             }
 
-            (new ConsolePrintter)->text("\nRolling back migration")
+            (new ConsolePrintter())->text("\nRolling back migration")
             ->text(basename($migration), 'yellow')
             ->print();
             $migrationInstance = include $migration;
             $migrationInstance->down();
-            (new ConsolePrintter)->text("OK", 'black', 'green')->print();
+            (new ConsolePrintter())->text("OK", 'black', 'green')->print();
 
             self::markAsRolledBack($migration);
         }
@@ -96,6 +96,10 @@ class MigrationRunner
             ->where('migrate', '=', $migrationName)
             ->andWhere('state', '=', 'up')
             ->get();
+
+        if(is_string($result)) {
+            return false;
+        }
 
         return count($result) > 0 ? true : false;
     }

@@ -38,10 +38,10 @@ class QueryBuilder
     protected PDO $conn;
     protected string $table = '';
     /**
-     * @var array<string, mixed>
+     * @var array<string, Builder>
      */
     protected array $builders;
-    protected mixed $currentBuilder;
+    protected object $currentBuilder;
     protected ?PDO $testingPdo;
 
     public function __construct(string $table, ?PDO $testingPdo = null)
@@ -84,7 +84,7 @@ class QueryBuilder
         foreach ($this->builders as $builderName => $builder) {
             if (method_exists($builder, $method)) {
                 $this->currentBuilder = $builder; // Change the context
-                if($method === 'insert' || $method === 'update' || $method === 'delete' || $method === 'upsert') {
+                if ($method === 'insert' || $method === 'update' || $method === 'delete' || $method === 'upsert') {
                     $builder->$method(...$params);
                     return $this;
                 } else {
@@ -99,9 +99,9 @@ class QueryBuilder
 
     /**
      * Execute the query and return the result
-     * @return array<object>
+     * @return array<object>|string
      */
-    public function get()
+    public function get(): array|string
     {
         return $this->exec();
     }
@@ -112,21 +112,37 @@ class QueryBuilder
      */
     private function exec(): array|string
     {
-        if($this->builders['insert']->getLastInsertedID() !== null) {
-            return $this->builders['insert']->getLastInsertedID();
+        /** @var InsertBuilder $insertBuilder */
+        $insertBuilder = $this->builders['insert'];
+        if ($insertBuilder->getLastInsertedID() !== null) {
+            return $insertBuilder->getLastInsertedID();
         }
 
-        $columns = $this->builders['select']->getQuery();
-        $whereSql = $this->builders['where']->getQuery();
-        $whereParams = $this->builders['where']->getParams();
-        $joinSql = $this->builders['join']->getQuery();
-        $orderBySql = $this->builders['orderBy']->getQuery();
-        $limitSql = $this->builders['limit']->getQuery();
+        /** @var SelectBuilder $selectBuilder */
+        $selectBuilder = $this->builders['select'];
+        $columns = $selectBuilder->getQuery();
+
+        /** @var WhereBuilder $whereBuilder */
+        $whereBuilder = $this->builders['where'];
+        $whereSql = $whereBuilder->getQuery();
+        $whereParams = $whereBuilder->getParams();
+
+        /** @var JoinBuilder $joinBuilder */
+        $joinBuilder = $this->builders['join'];
+        $joinSql = $joinBuilder->getQuery();
+
+        /** @var OrderByBuilder $orderByBuilder */
+        $orderByBuilder = $this->builders['orderBy'];
+        $orderBySql = $orderByBuilder->getQuery();
+
+        /** @var LimitBuilder $limitBuilder */
+        $limitBuilder = $this->builders['limit'];
+        $limitSql = $limitBuilder->getQuery();
 
         $query = "SELECT {$columns} FROM {$this->table} {$joinSql} {$whereSql} {$orderBySql} {$limitSql}";
 
         $stmt = null;
-        if($this->testingPdo === null) {
+        if ($this->testingPdo === null) {
             $stmt = $this->conn->prepare($query);
         } else {
             $stmt = $this->testingPdo->prepare($query);

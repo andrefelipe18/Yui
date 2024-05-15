@@ -4,18 +4,29 @@ declare(strict_types=1);
 
 namespace Yui\Core\Console;
 
+use Yui\Core\Commands\Command;
+
 class Kernel
 {
+    /** @var array<string> */
     public array $arguments = [];
     private ConsolePrintter $printer;
 
+    /**
+     * Kernel constructor.
+     * @param array<string> $arguments
+     */
     public function __construct(array $arguments)
     {
         $this->arguments = $arguments;
         $this->printer = new ConsolePrintter();
     }
 
-    public function boot()
+    /**
+     * Function to boot the console
+     * @return void
+     */
+    public function boot(): void
     {
         if (count($this->arguments) < 2 || $this->arguments[1] === 'help') {
             $this->runCommand('Yui\Core\Commands\Help');
@@ -36,14 +47,27 @@ class Kernel
         }
     }
 
+    /**
+     * Function to build the command namespace
+     * @param string $namespace
+     * @param string $commandName
+     * @param string $commandAction
+     * @return string
+     */
     private function buildCommandNamespace(string $namespace, string $commandName, string $commandAction): string
     {
         return $namespace . '\\' . $commandName . '\\' . $commandAction;
     }
 
+    /**
+     * Function to run a command
+     * @param string $commandNamespace
+     * @return void
+     */
     private function runCommand(string $commandNamespace): void
     {
+        /** @var Command */
         $commandInstance = new $commandNamespace();
-        $commandInstance->run();
+        $commandInstance->run($this->arguments);
     }
 }

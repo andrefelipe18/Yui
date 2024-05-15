@@ -12,10 +12,10 @@ class WarningConsolePrintter extends Printter
 {
     /**
      * Make a info message to be printed in the console.
-     * @param string $text The text to be printed.
+     * @param string $message The text to be printed.
      * @return string The formatted error message.
      */
-    public function warning(string $message): void
+    public function warning(string $message): string
     {
         /**
          * WARNING in background yellow and bold with text in black.
@@ -23,9 +23,6 @@ class WarningConsolePrintter extends Printter
          *
          * Message in white.
          */
-        echo "\033[30;43;1m WARNING \033[0m\n\n{$message}\033[0m\n";
-
-        // Reset the color
-        echo "\033[0m";
+        return "\033[30;43;1m WARNING \033[0m\n\n{$message}\033[0m\n";
     }
 }

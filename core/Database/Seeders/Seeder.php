@@ -85,7 +85,7 @@ class Seeder
 
         $stmt = $this->prepareStatement();
 
-        (new ConsolePrintter)->text("Seeding {$this->table} table", 'white', 'black')->print();
+        (new ConsolePrintter())->text("Seeding {$this->table} table", 'white', 'black')->print();
         for ($i = 0; $i < $this->repeat; $i++) {
             $values = array_map(fn ($func) => $func(), $this->columns);
             $stmt->execute(array_values($values));

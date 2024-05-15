@@ -29,10 +29,10 @@ class SeedRunner
         foreach ($seeders as $seeder) {
             try {
                 self::runSeeder($seeder);
-                (new ConsolePrintter)->text("Seeder {$seeder} ran successfully", 'green')->print();
+                (new ConsolePrintter())->text("Seeder {$seeder} ran successfully", 'green')->print();
             } catch (\Exception $e) {
+                (new ConsolePrintter())->text("Seeder {$seeder} failed: {$e->getMessage()}", 'red')->print();
                 throw $e;
-                (new ConsolePrintter)->text("Seeder {$seeder} failed: {$e->getMessage()}", 'red')->print();
             }
         }
     }
