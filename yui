@@ -12,18 +12,4 @@ $arguments = $_SERVER['argv'];
 
 $kernel = new Kernel($argv);
 
-$kernel->boot();
-
-/**
-if(empty($argv[1])){
-    echo "No args" . PHP_EOL;
-    die();
-}
-
-if ($argv[1] === 'up') {
-	exec(
-        'php public/index.php'
-    );
-    exit;
-}
-*/
+$kernel->boot();    

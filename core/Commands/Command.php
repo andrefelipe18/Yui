@@ -9,8 +9,14 @@ namespace Yui\Core\Commands;
  */
 abstract class Command
 {
-	public string $name = '';
-	public string $description = '';
+    public string $name = '';
+    public string $description = '';
+    public string $usage = '';
 
-	abstract public function run();
+    /**
+     * Run the command
+     * @param array<string> $args
+     * @return void
+     */
+    abstract public function run(array $args = []): void;
 }

@@ -9,12 +9,13 @@ use Yui\Core\Database\Migrations\MigrationRunner;
 
 class Refresh extends Command
 {
-	public string $name = 'refresh';
-	public string $description = 'Refresh migrations';
+    public string $name = 'refresh';
+    public string $description = 'Refresh migrations';
+    public string $usage = 'php yui migrate:refresh';
 
-	public function run()
-	{
-		MigrationRunner::rollback();
-		MigrationRunner::run();
-	}
+    public function run(array $args = []): void
+    {
+        MigrationRunner::rollback();
+        MigrationRunner::run();
+    }
 }

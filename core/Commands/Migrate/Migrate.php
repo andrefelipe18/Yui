@@ -9,11 +9,12 @@ use Yui\Core\Database\Migrations\MigrationRunner;
 
 class Migrate extends Command
 {
-	public string $name = 'migrate';
-	public string $description = 'Run all pending migrations';
+    public string $name = 'migrate';
+    public string $description = 'Run all pending migrations';
+    public string $usage = 'php yui migrate';
 
-	public function run()
-	{
-		MigrationRunner::run();
-	}
+    public function run(array $args = []): void
+    {
+        MigrationRunner::run();
+    }
 }

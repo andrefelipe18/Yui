@@ -9,11 +9,12 @@ use Yui\Core\Database\Seeders\SeedRunner;
 
 class Seed extends Command
 {
-	public string $name = 'seed';
-	public string $description = 'Seed the database';
+    public string $name = 'seed';
+    public string $description = 'Seed the database';
+    public string $usage = 'php yui db:seed';
 
-	public function run()
-	{
-		SeedRunner::run();
-	}
+    public function run(array $args = []): void
+    {
+        SeedRunner::run();
+    }
 }

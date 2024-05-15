@@ -25,6 +25,7 @@ This mini framework made from the heart has helped me understand how Laravel pro
     - [x] Seeders
 - [ ] Command Line Interface (In Progress)
 - [ ] Logger
+- [ ] Refact all
 - [ ] FrankenPHP
 - [ ] File routing system
 - [ ] Middleware
