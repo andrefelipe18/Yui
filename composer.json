@@ -14,7 +14,11 @@
             "App\\": "app",
             "Yui\\Tests\\": "tests",
             "Yui\\Core\\": "core"
-        }
+        },
+        "files": [
+            "core/Helpers/Functions/ConsolePrinter.php",
+            "core/Helpers/Functions/Logger.php"
+        ]
     },
     "require-dev": {
         "pestphp/pest": "^2.34",

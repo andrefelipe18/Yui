@@ -20,7 +20,7 @@ pgsqlInit
 notes*.md
 
 # App files
-
+storage/logs/*.log
 
 # Dev Tools
 .php-cs-fixer.cache

@@ -19,13 +19,21 @@ This mini framework made from the heart has helped me understand how Laravel pro
         - [x] Group By
         - [x] Order By
         - [x] Limit
+        - [ ] Offset
         - [x] Raw Query
         - [x] Update Or Insert (Upsert)
+        - [ ] Select All
+        - [ ] Find
+        - [ ] Find All
+        - [ ] Find By
+        - [ ] Find All By
+        - [ ] Create
     - [x] Migration
     - [x] Seeders
-- [ ] Command Line Interface (In Progress)
-- [ ] Logger
-- [ ] Refact all
+- [x] Command Line Interface (In Progress)
+- [x] Logger
+- [ ] Refact all (Classes, Docs and especially Tests)
+- [ ] API Documentation
 - [ ] FrankenPHP
 - [ ] File routing system
 - [ ] Middleware
