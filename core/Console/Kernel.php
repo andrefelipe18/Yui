@@ -6,6 +6,8 @@ namespace Yui\Core\Console;
 
 use Yui\Core\Commands\Command;
 
+use function Yui\Core\Helpers\Functions\logger;
+
 class Kernel
 {
     /** @var array<string> */
@@ -28,8 +30,9 @@ class Kernel
      */
     public function boot(): void
     {
+        logger()->framework('Yui console started');
         if (count($this->arguments) < 2 || $this->arguments[1] === 'help') {
-            $this->runCommand('Yui\Core\Commands\Help');
+            $this->runCommand('Yui\Core\Commands\Help\Help');
             return;
         }
 

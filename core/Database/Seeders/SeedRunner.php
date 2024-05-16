@@ -29,9 +29,9 @@ class SeedRunner
         foreach ($seeders as $seeder) {
             try {
                 self::runSeeder($seeder);
-                (new ConsolePrintter())->text("Seeder {$seeder} ran successfully", 'green')->print();
+                consolePrinter()->text("Seeder {$seeder} ran successfully", 'green')->print();
             } catch (\Exception $e) {
-                (new ConsolePrintter())->text("Seeder {$seeder} failed: {$e->getMessage()}", 'red')->print();
+                consolePrinter()->text("Seeder {$seeder} failed: {$e->getMessage()}", 'red')->print();
                 throw $e;
             }
         }

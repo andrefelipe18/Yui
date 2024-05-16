@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Yui\Core\Database\Migrations;
 
 use PDO;
-use Yui\Core\Console\ConsolePrintter;
 use Yui\Core\Database\Connection;
 use Yui\Core\Database\DB;
 use Yui\Core\Helpers\Dotenv;
+use function Yui\Core\Helpers\Functions\consolePrinter;
 
 class MigrationRunner
 {
@@ -25,7 +25,7 @@ class MigrationRunner
 
         $migrations = glob('app/Database/Migrations/*.php');
 
-        if(!$migrations) {
+        if (!$migrations) {
             throw new \Exception("No migrations found");
         }
 
@@ -34,12 +34,12 @@ class MigrationRunner
                 continue;
             }
 
-            (new ConsolePrintter())->text("\nRunning migration")
-            ->text(basename($migration), 'yellow')
-            ->print();
+            consolePrinter()->text("\nRunning migration")
+                ->text(basename($migration), 'yellow')
+                ->print();
             $migrationInstance = include $migration;
             $migrationInstance->up();
-            (new ConsolePrintter())->text("OK", 'black', 'green')->print();
+            consolePrinter()->text("OK", 'black', 'green')->print();
 
             self::markAsRun($migration);
         }
@@ -59,8 +59,8 @@ class MigrationRunner
 
         $migrations = glob('app/Database/Migrations/*.php');
 
-        if(!$migrations) {
-            (new ConsolePrintter())->error("No migrations found")->print();
+        if (!$migrations) {
+            consolePrinter()->error("No migrations found")->print();
             throw new \Exception("No migrations found");
         }
 
@@ -71,12 +71,12 @@ class MigrationRunner
                 continue;
             }
 
-            (new ConsolePrintter())->text("\nRolling back migration")
-            ->text(basename($migration), 'yellow')
-            ->print();
+            consolePrinter()->text("\nRolling back migration")
+                ->text(basename($migration), 'yellow')
+                ->print();
             $migrationInstance = include $migration;
             $migrationInstance->down();
-            (new ConsolePrintter())->text("OK", 'black', 'green')->print();
+            consolePrinter()->text("OK", 'black', 'green')->print();
 
             self::markAsRolledBack($migration);
         }
@@ -97,7 +97,7 @@ class MigrationRunner
             ->andWhere('state', '=', 'up')
             ->get();
 
-        if(is_string($result)) {
+        if (is_string($result)) {
             return false;
         }
 

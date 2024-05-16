@@ -8,7 +8,7 @@ use Faker\Factory as Faker;
 use Faker\Generator;
 use PDO;
 use PDOStatement;
-use Yui\Core\Console\ConsolePrintter;
+use function Yui\Core\Helpers\Functions\consolePrinter;
 use Yui\Core\Database\Connection;
 
 /**
@@ -85,7 +85,7 @@ class Seeder
 
         $stmt = $this->prepareStatement();
 
-        (new ConsolePrintter())->text("Seeding {$this->table} table", 'white', 'black')->print();
+        consolePrinter()->text("Seeding {$this->table} table", 'white', 'black')->print();
         for ($i = 0; $i < $this->repeat; $i++) {
             $values = array_map(fn ($func) => $func(), $this->columns);
             $stmt->execute(array_values($values));
