@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Yui\Core\Database;
 
+use Exception;
 use PDO;
 use Yui\Core\Helpers\Dotenv;
 use Yui\Core\Database\Drivers\Sqlite;
 use Yui\Core\Database\Drivers\Pgsql;
 use Yui\Core\Database\Drivers\Mysql;
-use Yui\Core\Exceptions\Database\ConnectionDatabaseException;
-use Yui\Core\Exceptions\Database\Drivers\DatabaseDriverConnectionException;
 
 /**
  * This class is responsible for connecting to the database using PDO
@@ -67,7 +66,7 @@ class Connection
         $port = Dotenv::get('DATABASE_PORT');
 
         if ($host === null || $dbname === null || $user === null || $pass === null || $port === null) {
-            throw new ConnectionDatabaseException("Database connection parameters are not set in the .env file");
+            throw new Exception("Database connection parameters are not set in the .env file");
         }
 
         try {
@@ -88,10 +87,10 @@ class Connection
             if ($tempPDO instanceof PDO) {
                 self::$pdo = $tempPDO;
             } else {
-                throw new DatabaseDriverConnectionException("Failed to connect to database: " . $tempPDO->getMessage());
+                throw new Exception("Failed to connect to database: " . $tempPDO->getMessage());
             }
         } catch (\PDOException $e) {
-            throw new DatabaseDriverConnectionException("Failed to connect to database: " . $e->getMessage());
+            throw new Exception("Failed to connect to database: " . $e->getMessage());
         }
 
         return self::$pdo;
@@ -117,11 +116,11 @@ class Connection
         $driver = Dotenv::get('DATABASE_CONNECTION');
 
         if ($driver === null) {
-            throw new ConnectionDatabaseException("Database connection type is not set in the .env file");
+            throw new Exception("Database connection type is not set in the .env file");
         }
 
         if (!in_array($driver, ['sqlite', 'mysql', 'pgsql'])) {
-            throw new ConnectionDatabaseException("Database connection type is not supported");
+            throw new Exception("Database connection type is not supported");
         }
 
         return $driver;
@@ -134,13 +133,13 @@ class Connection
     private static function connectSqlite(?string $pathToSqlite = null): PDO
     {
         if ($pathToSqlite === null) {
-            throw new ConnectionDatabaseException("Path to SQLite file is not set");
+            throw new Exception("Path to SQLite file is not set");
         }
 
         $conn = Sqlite::connect($pathToSqlite);
 
         if ($conn instanceof \PDOException) {
-            throw new DatabaseDriverConnectionException("Failed to connect to database: " . $conn->getMessage());
+            throw new Exception("Failed to connect to database: " . $conn->getMessage());
         }
 
         return $conn;

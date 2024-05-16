@@ -9,7 +9,6 @@ use PDO;
 use Yui\Core\Helpers\Dotenv;
 use Yui\Core\Database\Initializers\MySQLDatabaseInitializer;
 use Yui\Core\Database\Initializers\PostgreSQLDatabaseInitializer;
-use Yui\Core\Exceptions\Database\DatabaseInitializerException;
 
 /**
  * Base class for database initializers.
@@ -70,13 +69,13 @@ class DatabaseInitializer
 
     /**
      * Set the database driver.
-     * @throws DatabaseInitializerException If the database driver is not set or is not supported.
+     * @throws Exception If the database driver is not set or is not supported.
      */
     private static function setDriver(): void
     {
         $driver = Dotenv::get('DATABASE_CONNECTION');
         if($driver === null) {
-            throw new DatabaseInitializerException("Database connection type is not set in the .env file");
+            throw new Exception("Database connection type is not set in the .env file");
         }
 
         self::$driver = $driver;
@@ -84,17 +83,17 @@ class DatabaseInitializer
 
     /**
      * Check if the database driver is set and supported.
-     * @throws DatabaseInitializerException If the database driver is not set or is not supported.
+     * @throws Exception If the database driver is not set or is not supported.
      * @return void
      */
     private static function checkDriver(): void
     {
         if (self::$driver == '' || self::$driver == null) {
-            throw new DatabaseInitializerException("Database connection type is not set in the .env file");
+            throw new Exception("Database connection type is not set in the .env file");
         }
 
         if (!in_array(self::$driver, ['sqlite', 'mysql', 'pgsql'])) {
-            throw new DatabaseInitializerException("Database connection type is not supported");
+            throw new Exception("Database connection type is not supported");
         }
     }
 
@@ -112,7 +111,7 @@ class DatabaseInitializer
         ];
 
         if($config['host'] === null || $config['user'] === null || $config['pass'] === null || $config['port'] === null) {
-            throw new DatabaseInitializerException("Database connection parameters are not set in the .env file");
+            throw new Exception("Database connection parameters are not set in the .env file");
         } else {
             return $config;
         }
